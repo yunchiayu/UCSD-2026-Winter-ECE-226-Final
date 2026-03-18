@@ -1,0 +1,4 @@
+GPU:
+  name: RTX4090
+  peak_compute: 661 # TFLOPS (FP16)
+  peak_bandwidth: 1 # TB/s
