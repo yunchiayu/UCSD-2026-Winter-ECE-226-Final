@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer
 import torch
 import argparse
 import json
@@ -15,7 +15,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-3B-Instruct")
+    parser.add_argument("--model_name", type=str, default="Qwen/Qwen2.5-3B-Instruct")
     parser.add_argument("--sum-seq-len", type=int, default=1024)
     parser.add_argument("--gen-seq-len", type=int, default=64)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -27,7 +27,7 @@ def parse_args():
 
 def get_output_folder(args):
     output_dir = Path(args.output_dir)
-    output_dir = output_dir / args.model.replace("/", "-") \
+    output_dir = output_dir / args.model_name.replace("/", "-") \
                  / f"batch-size-{args.batch_size}" \
                  / f"sum-seq-len-{args.sum_seq_len}" \
                  / f"gen-seq-len-{args.gen_seq_len}"
@@ -49,12 +49,19 @@ def main(args):
     base_mem_loadmodel = torch.cuda.memory_allocated()
     
     # Load model & tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model,
-        dtype=torch.bfloat16,
-        device_map=DEVICE
-    )
+    tokenizer = None
+    model = None
+    if "Qwen" in args.model_name:
+        from transformers import AutoModelForCausalLM
+        # tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model_name,
+            dtype=torch.float16,
+            device_map=DEVICE
+        )
+    else:
+        raise ValueError(f"Model {args.model_name} not supported")
+
     model.eval()
     torch.cuda.synchronize()
     peak_mem_loadmodel = torch.cuda.max_memory_allocated() - base_mem_loadmodel # Byte
@@ -127,7 +134,7 @@ def main(args):
     with open(output_folder / "results.json", "w") as f:
         results = {
             "args": {
-                "model": args.model,
+                "model_name": args.model_name,
                 "batch_size": args.batch_size,
                 "sum_seq_len": args.sum_seq_len,
                 "gen_seq_len": args.gen_seq_len,
