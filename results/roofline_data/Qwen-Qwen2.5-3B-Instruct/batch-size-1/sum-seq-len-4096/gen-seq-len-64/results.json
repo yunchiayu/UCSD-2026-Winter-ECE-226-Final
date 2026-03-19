@@ -1,0 +1,197 @@
+{
+    "args": {
+        "model_config_path": "scripts/../gpu_simulation/model_config/Qwen2.5-3B-Instruct.json",
+        "hardware_config_path": "scripts/../gpu_simulation/hardware_config/RTX4090.yaml",
+        "sum_seq_len": 4096,
+        "gen_seq_len": 64,
+        "batch_size": 1
+    },
+    "unit": {
+        "time": "ms",
+        "flops": "GFLOPs",
+        "throughput": "TFLOPS",
+        "arithmetic_intensity": "FLOPS/byte"
+    },
+    "kernels": [
+        {
+            "phase": "prefill",
+            "name": "overall",
+            "flops": 631.3769697280001,
+            "arithmetic_intensity": 1081.0121674977033,
+            "time": 4.419230246709453,
+            "throughput": 142.87034946824093,
+            "optimal_time": 0.9862080670015129,
+            "optimal_throughput": 640.2066570471802
+        },
+        {
+            "phase": "prefill",
+            "name": "wq",
+            "flops": 34.359738368,
+            "arithmetic_intensity": 819.2,
+            "time": 0.2098995563056734,
+            "throughput": 163.69609813735127,
+            "optimal_time": 0.051981449875945544,
+            "optimal_throughput": 660.9999999999999
+        },
+        {
+            "phase": "prefill",
+            "name": "wk",
+            "flops": 4.294967296,
+            "arithmetic_intensity": 215.57894736842104,
+            "time": 0.03934844376312362,
+            "throughput": 109.1521515274039,
+            "optimal_time": 0.019922944,
+            "optimal_throughput": 215.57894736842107
+        },
+        {
+            "phase": "prefill",
+            "name": "wv",
+            "flops": 4.294967296,
+            "arithmetic_intensity": 215.57894736842104,
+            "time": 0.03946755495336321,
+            "throughput": 108.82273556279692,
+            "optimal_time": 0.019922944,
+            "optimal_throughput": 215.57894736842107
+        },
+        {
+            "phase": "prefill",
+            "name": "wo",
+            "flops": 34.359738368,
+            "arithmetic_intensity": 819.2,
+            "time": 0.20892000074187914,
+            "throughput": 164.46361404359504,
+            "optimal_time": 0.051981449875945544,
+            "optimal_throughput": 660.9999999999999
+        },
+        {
+            "phase": "prefill",
+            "name": "w1",
+            "flops": 184.683593728,
+            "arithmetic_intensity": 1214.6758620689654,
+            "time": 1.120920009083218,
+            "throughput": 164.76072532512794,
+            "optimal_time": 0.27940029308320724,
+            "optimal_throughput": 661.0
+        },
+        {
+            "phase": "prefill",
+            "name": "w3",
+            "flops": 184.683593728,
+            "arithmetic_intensity": 1214.6758620689654,
+            "time": 1.144514673286014,
+            "throughput": 161.3641118272038,
+            "optimal_time": 0.27940029308320724,
+            "optimal_throughput": 661.0
+        },
+        {
+            "phase": "prefill",
+            "name": "w2",
+            "flops": 184.683593728,
+            "arithmetic_intensity": 1214.6758620689654,
+            "time": 1.109955565796958,
+            "throughput": 166.38827662925004,
+            "optimal_time": 0.27940029308320724,
+            "optimal_throughput": 661.0
+        },
+        {
+            "phase": "prefill",
+            "name": "qK_softmax_sV_fused",
+            "flops": 0.016777216,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.5462044427792231,
+            "throughput": 0.03071600061440984,
+            "optimal_time": 0.004198400000000001,
+            "optimal_throughput": 3.9960975609756098
+        },
+        {
+            "phase": "decode",
+            "name": "overall",
+            "flops": 0.17091788800000002,
+            "arithmetic_intensity": 5.088780487804878,
+            "time": 0.5030018769812159,
+            "throughput": 0.33979572606323055,
+            "optimal_time": 0.158443008,
+            "optimal_throughput": 1.0787341780332775
+        },
+        {
+            "phase": "decode",
+            "name": "wq",
+            "flops": 0.008388608,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.068065749681005,
+            "throughput": 0.12324271809704311,
+            "optimal_time": 0.008396800000000001,
+            "optimal_throughput": 0.9990243902439024
+        },
+        {
+            "phase": "decode",
+            "name": "wk",
+            "flops": 0.001048576,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.052787139158277166,
+            "throughput": 0.019864232400546383,
+            "optimal_time": 0.001053184,
+            "optimal_throughput": 0.9956246961594556
+        },
+        {
+            "phase": "decode",
+            "name": "wv",
+            "flops": 0.001048576,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.0520040835104333,
+            "throughput": 0.020163339669078677,
+            "optimal_time": 0.001053184,
+            "optimal_throughput": 0.9956246961594556
+        },
+        {
+            "phase": "decode",
+            "name": "wo",
+            "flops": 0.008388608,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.04923526358713085,
+            "throughput": 0.17037804591326736,
+            "optimal_time": 0.008396800000000001,
+            "optimal_throughput": 0.9990243902439024
+        },
+        {
+            "phase": "decode",
+            "name": "w1",
+            "flops": 0.045088768,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.07978097378509119,
+            "throughput": 0.565156902214019,
+            "optimal_time": 0.04511488,
+            "optimal_throughput": 0.9994212109175509
+        },
+        {
+            "phase": "decode",
+            "name": "w3",
+            "flops": 0.045088768,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.07199177813729168,
+            "throughput": 0.6263044081785786,
+            "optimal_time": 0.04511488,
+            "optimal_throughput": 0.9994212109175509
+        },
+        {
+            "phase": "decode",
+            "name": "w2",
+            "flops": 0.045088768,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.06946701396696477,
+            "throughput": 0.6490673115939903,
+            "optimal_time": 0.04511488,
+            "optimal_throughput": 0.9994212109175509
+        },
+        {
+            "phase": "decode",
+            "name": "qK_softmax_sV_fused",
+            "flops": 0.016777216,
+            "arithmetic_intensity": 3.9960975609756098,
+            "time": 0.05966987515502195,
+            "throughput": 0.28116727169971284,
+            "optimal_time": 0.004198400000000001,
+            "optimal_throughput": 3.9960975609756098
+        }
+    ]
+}
