@@ -45,7 +45,7 @@ def main(args):
     model_config_path = Path(args.model_config_path)
     raw_config = load_json(model_config_path)
     if 'Qwen2ForCausalLM' in raw_config["architectures"]:
-        from model import LlamaModelArgs, LlamaModel
+        from Llama import LlamaModelArgs, LlamaModel
         model_args = LlamaModelArgs.init_from_config(raw_config)
         model = LlamaModel(model_args=model_args)
     else:

@@ -84,26 +84,34 @@ class LlamaModel():
 
         self.operator_graph = {
             "prefill":{
-                "wq": { "B": 1, "M": B*Lin, "N": D, "K": D },
-                "wk": { "B": 1, "M": B*Lin, "N": H_kv * D_h, "K": D },
-                "wv": { "B": 1, "M": B*Lin, "N": H_kv * D_h, "K": D },
-                "wo": { "B": 1, "M": B*Lin, "N": D, "K": D },
-                "w1": { "B": 1, "M": B_expert*Lin, "N": D, "K": D_i },
-                "w3": { "B": 1, "M": B_expert*Lin, "N": D, "K": D_i },
-                "w2": { "B": 1, "M": B_expert*Lin, "N": D_i, "K": D },
-                "qk": { "B": B * H_kv, "M": num_q_per_kv*Lin, "N": D_h, "K": Lin},
-                "sv": { "B": B * H_kv, "M": num_q_per_kv*Lin, "N": Lin, "K": D_h },
+                "wq": { "type": "gemm", "params": { "B": 1, "M": B*Lin, "N": D, "K": D },},
+                "wk": { "type": "gemm", "params": { "B": 1, "M": B*Lin, "N": H_kv * D_h, "K": D } },
+                "wv": { "type": "gemm", "params": { "B": 1, "M": B*Lin, "N": H_kv * D_h, "K": D } },
+                "wo": { "type": "gemm", "params": { "B": 1, "M": B*Lin, "N": D, "K": D } },
+                "w1": { "type": "gemm", "params": { "B": 1, "M": B_expert*Lin, "N": D, "K": D_i } },
+                "w3": { "type": "gemm", "params": { "B": 1, "M": B_expert*Lin, "N": D, "K": D_i } },
+                "w2": { "type": "gemm", "params": { "B": 1, "M": B_expert*Lin, "N": D_i, "K": D } },
+                "qK_softmax_sV_fused": {
+                    "type": "qK_softmax_sV_fused",
+                    "params": { "B": B, "H_kv": H_kv, "num_q_per_kv": num_q_per_kv, "Lin": Lin, "D_h": D_h },
+                }
+                # "qk": { "B": B * H_kv, "M": num_q_per_kv*Lin, "N": D_h, "K": Lin},
+                # "sv": { "B": B * H_kv, "M": num_q_per_kv*Lin, "N": Lin, "K": D_h },
             },
             "decode":{
-                "wq": { "B": 1, "M": B, "N": D, "K": D },
-                "wk": { "B": 1, "M": B, "N": H_kv * D_h, "K": D },
-                "wv": { "B": 1, "M": B, "N": H_kv * D_h, "K": D },
-                "wo": { "B": 1, "M": B, "N": D, "K": D },
-                "w1": { "B": 1, "M": B_expert, "N": D, "K": D_i },
-                "w3": { "B": 1, "M": B_expert, "N": D, "K": D_i },
-                "w2": { "B": 1, "M": B_expert, "N": D_i, "K": D },
-                "qk": { "B": B * H_kv, "M": num_q_per_kv, "N": D_h, "K": Lin},
-                "sv": { "B": B * H_kv, "M": num_q_per_kv, "N": Lin, "K": D_h },
+                "wq": { "type": "gemm", "params": { "B": 1, "M": B, "N": D, "K": D } },
+                "wk": { "type": "gemm", "params": { "B": 1, "M": B, "N": H_kv * D_h, "K": D } },
+                "wv": { "type": "gemm", "params": { "B": 1, "M": B, "N": H_kv * D_h, "K": D } },
+                "wo": { "type": "gemm", "params": { "B": 1, "M": B, "N": D, "K": D } },
+                "w1": { "type": "gemm", "params": { "B": 1, "M": B_expert, "N": D, "K": D_i } },
+                "w3": { "type": "gemm", "params": { "B": 1, "M": B_expert, "N": D, "K": D_i } },
+                "w2": { "type": "gemm", "params": { "B": 1, "M": B_expert, "N": D_i, "K": D } },
+                "qK_softmax_sV_fused": {
+                    "type": "qK_softmax_sV_fused",
+                    "params": { "B": B, "H_kv": H_kv, "num_q_per_kv": num_q_per_kv, "Lin": Lin, "D_h": D_h },
+                }
+                # "qk": { "B": B * H_kv, "M": num_q_per_kv, "N": D_h, "K": Lin},
+                # "sv": { "B": B * H_kv, "M": num_q_per_kv, "N": Lin, "K": D_h },
             },
         }
         return self.operator_graph
