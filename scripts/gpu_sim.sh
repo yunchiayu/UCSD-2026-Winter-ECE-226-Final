@@ -13,17 +13,30 @@ HARDWARE_CONFIG_PATH="$PRJ_DIR/gpu_simulation/hardware_config/RTX4090.yaml"
 
 
 
-SUM_SEQ_LEN=8192
+# SUM_SEQ_LEN=8192
+SUM_SEQ_LEN_LIST=(1024 2048 4096 8192)
 GEN_SEQ_LEN=64
 BATCH_SIZE=1
 
 
 export CUDA_VISIBLE_DEVICES=1 # set gpu id
 
-python "$PY" \
-    --model $MODEL \
-    --model-config-path $MODEL_CONFIG_PATH \
-    --hardware-config-path $HARDWARE_CONFIG_PATH \
-    --sum-seq-len $SUM_SEQ_LEN \
-    --gen-seq-len $GEN_SEQ_LEN \
-    --batch-size $BATCH_SIZE 
+# python "$PY" \
+#     --model $MODEL \
+#     --model-config-path $MODEL_CONFIG_PATH \
+#     --hardware-config-path $HARDWARE_CONFIG_PATH \
+#     --sum-seq-len $SUM_SEQ_LEN \
+#     --gen-seq-len $GEN_SEQ_LEN \
+#     --batch-size $BATCH_SIZE 
+
+
+for SUM_SEQ_LEN in "${SUM_SEQ_LEN_LIST[@]}"
+do
+    python "$PY" \
+        --model $MODEL \
+        --model-config-path $MODEL_CONFIG_PATH \
+        --hardware-config-path $HARDWARE_CONFIG_PATH \
+        --sum-seq-len $SUM_SEQ_LEN \
+        --gen-seq-len $GEN_SEQ_LEN \
+        --batch-size $BATCH_SIZE 
+done

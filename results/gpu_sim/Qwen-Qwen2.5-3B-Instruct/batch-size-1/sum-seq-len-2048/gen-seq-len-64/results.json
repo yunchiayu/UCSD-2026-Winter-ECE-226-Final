@@ -7,109 +7,133 @@
         "batch_size": 1
     },
     "performance": {
+        "unit": {
+            "time": "ms",
+            "throughput": "tokens/s"
+        },
         "TTFT_time": 17.789567670027232,
         "decoding_time": 360.220852224,
-        "latency_unit": "ms",
         "decoding_throughput": 177.66878181777827,
-        "throughput_unit": "tokens/s",
-        "time_dict_per_layer": {
+        "performance_per_layer": {
+            "unit": {
+                "time": "ms",
+                "flops": "GFLOPs",
+                "throughput": "TFLOPS",
+                "arithmetic_intensity": "FLOPS/byte"
+            },
             "prefill": {
-                "total_time": 0.49415465750075643,
+                "overall": {
+                    "time": 0.49415465750075643,
+                    "flops": 315.68848486400003,
+                    "throughput": 638.8455113640546,
+                    "arithmetic_intensity": 855.2859631795634
+                },
                 "breakdown": {
-                    "unit": "ms",
                     "wq": {
                         "time": 0.025990724937972772,
-                        "flops": 17179869184,
+                        "flops": 17.179869184,
                         "throughput": 660.9999999999999,
                         "arithmetic_intensity": 682.6666666666666
                     },
                     "wk": {
                         "time": 0.01048576,
-                        "flops": 2147483648,
+                        "flops": 2.147483648,
                         "throughput": 204.8,
                         "arithmetic_intensity": 204.8
                     },
                     "wv": {
                         "time": 0.01048576,
-                        "flops": 2147483648,
+                        "flops": 2.147483648,
                         "throughput": 204.8,
                         "arithmetic_intensity": 204.8
                     },
                     "wo": {
                         "time": 0.025990724937972772,
-                        "flops": 17179869184,
+                        "flops": 17.179869184,
                         "throughput": 660.9999999999999,
                         "arithmetic_intensity": 682.6666666666666
                     },
                     "w1": {
                         "time": 0.13970014654160362,
-                        "flops": 92341796864,
+                        "flops": 92.341796864,
                         "throughput": 661.0,
                         "arithmetic_intensity": 936.8510638297872
                     },
                     "w3": {
                         "time": 0.13970014654160362,
-                        "flops": 92341796864,
+                        "flops": 92.341796864,
                         "throughput": 661.0,
                         "arithmetic_intensity": 936.8510638297872
                     },
                     "w2": {
                         "time": 0.13970014654160362,
-                        "flops": 92341796864,
+                        "flops": 92.341796864,
                         "throughput": 661.0,
                         "arithmetic_intensity": 936.8510638297872
                     },
                     "qK_softmax_sV_fused": {
                         "time": 0.002101248,
-                        "flops": 8388608,
+                        "flops": 0.008388608,
                         "throughput": 3.9922027290448345,
                         "arithmetic_intensity": 3.992202729044834
                     }
                 }
             },
             "decode": {
-                "total_time": 0.156345856,
+                "overall": {
+                    "time": 0.156345856,
+                    "flops": 0.16252928,
+                    "throughput": 1.0395496507435413,
+                    "arithmetic_intensity": 9.668615984405458
+                },
                 "breakdown": {
-                    "unit": "ms",
                     "wq": {
                         "time": 0.008396800000000001,
-                        "flops": 8388608,
-                        "throughput": 0.9990243902439024
+                        "flops": 0.008388608,
+                        "throughput": 0.9990243902439024,
+                        "arithmetic_intensity": 3.992202729044834
                     },
                     "wk": {
                         "time": 0.001053184,
-                        "flops": 1048576,
-                        "throughput": 0.9956246961594556
+                        "flops": 0.001048576,
+                        "throughput": 0.9956246961594556,
+                        "arithmetic_intensity": 3.992202729044834
                     },
                     "wv": {
                         "time": 0.001053184,
-                        "flops": 1048576,
-                        "throughput": 0.9956246961594556
+                        "flops": 0.001048576,
+                        "throughput": 0.9956246961594556,
+                        "arithmetic_intensity": 3.992202729044834
                     },
                     "wo": {
                         "time": 0.008396800000000001,
-                        "flops": 8388608,
-                        "throughput": 0.9990243902439024
+                        "flops": 0.008388608,
+                        "throughput": 0.9990243902439024,
+                        "arithmetic_intensity": 3.992202729044834
                     },
                     "w1": {
                         "time": 0.04511488,
-                        "flops": 45088768,
-                        "throughput": 0.9994212109175509
+                        "flops": 0.045088768,
+                        "throughput": 0.9994212109175509,
+                        "arithmetic_intensity": 3.992202729044834
                     },
                     "w3": {
                         "time": 0.04511488,
-                        "flops": 45088768,
-                        "throughput": 0.9994212109175509
+                        "flops": 0.045088768,
+                        "throughput": 0.9994212109175509,
+                        "arithmetic_intensity": 3.992202729044834
                     },
                     "w2": {
                         "time": 0.04511488,
-                        "flops": 45088768,
-                        "throughput": 0.9994212109175509
+                        "flops": 0.045088768,
+                        "throughput": 0.9994212109175509,
+                        "arithmetic_intensity": 3.992202729044834
                     },
                     "qK_softmax_sV_fused": {
                         "time": 0.002101248,
-                        "flops": 8388608,
-                        "throughput": 3.9922027290448345
+                        "flops": 0.008388608,
+                        "throughput": 3.9922027290448345,
+                        "arithmetic_intensity": 3.992202729044834
                     }
                 }
             }

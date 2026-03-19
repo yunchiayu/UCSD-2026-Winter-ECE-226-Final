@@ -52,23 +52,26 @@ class Evaluator:
 
     def evaluate_single_layer(self, model_operator: dict):
         result_dict = {
+            "unit": {
+              "time": "ms",
+              "flops": "GFLOPs",
+              "throughput": "TFLOPS",
+              "arithmetic_intensity": "FLOPS/byte",
+            },
             "prefill": {
-                "total_time": 0.0,
-                "breakdown": {
-                    "unit": "ms",
-                }
+                "overall": {},
+                "breakdown": {}
             },
             "decode": {
-                "total_time": 0.0,
-                "breakdown": {
-                    "unit": "ms",
-                }
+                "overall": {},
+                "breakdown": {}
             }
         }
         # prefill
         prefill_operator = model_operator["prefill"]
-        prefill_time = 0.0
-        prefill_flops = 0.0
+        prefill_time = 0.0 # ns
+        prefill_flops = 0.0 # FLOPs
+        prefill_data_transfer_size = 0.0 
         for op_name, op_data in prefill_operator.items():
             if op_data["type"] == "gemm":
                 B, M, N, K = op_data["params"]["B"], op_data["params"]["M"], op_data["params"]["N"], op_data["params"]["K"]
@@ -94,17 +97,27 @@ class Evaluator:
                 arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
             prefill_time += operation_time
             prefill_flops += num_flops
+            prefill_data_transfer_size += data_transfer_size
             result_dict["prefill"]["breakdown"][op_name] = {#operation_time # ms
                 "time": operation_time,
-                "flops": num_flops,
+                "flops": num_flops * 1e-9, # GFLOPs
                 "throughput": throughput,
                 "arithmetic_intensity": arithmetic_intensity,
             }
+        prefill_throughput = prefill_flops / prefill_time * 1e-9 # TFLOPS/s
+        prefill_arithmetic_intensity = prefill_flops / prefill_data_transfer_size # FLOPS/byte
+        result_dict["prefill"]["overall"] = {
+            "time": prefill_time,
+            "flops": prefill_flops * 1e-9, # GFLOPs
+            "throughput": prefill_throughput,
+            "arithmetic_intensity": prefill_arithmetic_intensity,
+        }
 
         # decode
         decode_operator = model_operator["decode"]
         decode_time = 0.0
         decode_flops = 0.0
+        decode_data_transfer_size = 0.0
         for op_name, op_data in decode_operator.items():
             if op_data["type"] == "gemm":
                 B, M, N, K = op_data["params"]["B"], op_data["params"]["M"], op_data["params"]["N"], op_data["params"]["K"]
@@ -124,14 +137,21 @@ class Evaluator:
                 data_transfer_size = KV_cache_size + input_size + output_size # bytes
             decode_time += operation_time
             decode_flops += num_flops
+            decode_data_transfer_size += data_transfer_size
             result_dict["decode"]["breakdown"][op_name] = {#operation_time # ms
                 "time": operation_time,
-                "flops": num_flops,
+                "flops": num_flops * 1e-9, # GFLOPs
                 "throughput": throughput,
+                "arithmetic_intensity": arithmetic_intensity,
             }
-        
-        result_dict["prefill"]["total_time"] = prefill_time
-        result_dict["decode"]["total_time"] = decode_time
+        decode_throughput = decode_flops / decode_time * 1e-9 # TFLOPS/s
+        decode_arithmetic_intensity = decode_flops / decode_data_transfer_size # FLOPS/byte
+        result_dict["decode"]["overall"] = {
+            "time": decode_time,
+            "flops": decode_flops * 1e-9, # GFLOPs
+            "throughput": decode_throughput,
+            "arithmetic_intensity": decode_arithmetic_intensity,
+        }
 
         return result_dict
     
@@ -142,11 +162,11 @@ class Evaluator:
         gen_seq_len,
     ):
         model_operator_graph = model.build_operator_graph(batch_size, sum_seq_len)
-        time_dict_per_layer = self.evaluate_single_layer(model_operator_graph)
+        performance_per_layer = self.evaluate_single_layer(model_operator_graph)
 
         num_layers = model.num_layers
-        prefill_time = num_layers * time_dict_per_layer["prefill"]["total_time"] # ms
-        decode_time = num_layers * time_dict_per_layer["decode"]["total_time"] * gen_seq_len # ms
+        prefill_time = num_layers * performance_per_layer["prefill"]["overall"]["time"] # ms
+        decode_time = num_layers * performance_per_layer["decode"]["overall"]["time"] * gen_seq_len # ms
 
 
         decoding_throughput = batch_size * gen_seq_len / decode_time * 1e3 # tokens/s
@@ -154,12 +174,14 @@ class Evaluator:
 
 
         performace = {
+            "unit":{
+                "time": "ms",
+                "throughput": "tokens/s",
+            },
             "TTFT_time": prefill_time,
             "decoding_time": decode_time,
-            "latency_unit": "ms",
             "decoding_throughput": decoding_throughput,
-            "throughput_unit": "tokens/s",
-            "time_dict_per_layer": time_dict_per_layer
+            "performance_per_layer": performance_per_layer
         }
 
         return performace
