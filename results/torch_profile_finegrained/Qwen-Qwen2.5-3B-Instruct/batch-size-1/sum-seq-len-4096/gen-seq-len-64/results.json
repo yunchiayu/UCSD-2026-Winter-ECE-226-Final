@@ -1,0 +1,94 @@
+{
+    "args": {
+        "model_name": "Qwen/Qwen2.5-3B-Instruct",
+        "batch_size": 1,
+        "sum_seq_len": 4096,
+        "gen_seq_len": 64,
+        "warmup_iters": 20,
+        "seed": 42
+    },
+    "performance": {
+        "TTFT_time": 207.39276123046875,
+        "decoding_time": 2132.68603515625,
+        "latency_unit": "ms",
+        "decoding_throughput": 30.00910539338299,
+        "throughput_unit": "tokens/s"
+    },
+    "memory_usage": {
+        "load_model_peak_memory": 5.748046875,
+        "prefill_peak_memory": 1.3167724609375,
+        "decoding_peak_memory": 0.0020036697387695312,
+        "memory_unit": "GB"
+    },
+    "finegrained": {
+        "components": [
+            "wq",
+            "wk",
+            "wv",
+            "wo",
+            "qK",
+            "softmax",
+            "sV",
+            "w1",
+            "w2",
+            "w3",
+            "qK_softmax_sV_fused"
+        ],
+        "prefill_avg_ms": {
+            "wq": 0.21084355521533224,
+            "wk": 0.03872444439265463,
+            "wv": 0.03918666630569431,
+            "wo": 0.20982933416962624,
+            "qK": null,
+            "softmax": null,
+            "sV": null,
+            "w1": 1.1258586678240035,
+            "w2": 1.1153999997509851,
+            "w3": 1.1464071008894179,
+            "qK_softmax_sV_fused": 0.5476942227946388
+        },
+        "prefill_counts": {
+            "wq": 36,
+            "wk": 36,
+            "wv": 36,
+            "wo": 36,
+            "qK": 0,
+            "softmax": 0,
+            "sV": 0,
+            "w1": 36,
+            "w2": 36,
+            "w3": 36,
+            "qK_softmax_sV_fused": 36
+        },
+        "decode_avg_ms": {
+            "wq": 0.0593737079753838,
+            "wk": 0.04763180576608445,
+            "wv": 0.04606811121023687,
+            "wo": 0.043324319034582004,
+            "qK": null,
+            "softmax": null,
+            "sV": null,
+            "w1": 0.07370000169935843,
+            "w2": 0.06551144435232142,
+            "w3": 0.06824098640936427,
+            "qK_softmax_sV_fused": 0.05101384740232283
+        },
+        "decode_counts": {
+            "wq": 2304,
+            "wk": 2304,
+            "wv": 2304,
+            "wo": 2304,
+            "qK": 0,
+            "softmax": 0,
+            "sV": 0,
+            "w1": 2304,
+            "w2": 2304,
+            "w3": 2304,
+            "qK_softmax_sV_fused": 2304
+        },
+        "fused_attention": true,
+        "note": "If qK/softmax/sV are fused (e.g., SDPA/FlashAttention), timings appear under qK_softmax_sV_fused.",
+        "latency_unit": "ms",
+        "detail_enabled": false
+    }
+}

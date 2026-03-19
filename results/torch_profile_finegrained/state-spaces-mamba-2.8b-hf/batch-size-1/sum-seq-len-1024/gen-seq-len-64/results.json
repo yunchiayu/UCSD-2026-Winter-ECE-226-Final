@@ -1,0 +1,107 @@
+{
+    "args": {
+        "model_name": "state-spaces/mamba-2.8b-hf",
+        "batch_size": 1,
+        "sum_seq_len": 1024,
+        "gen_seq_len": 64,
+        "warmup_iters": 20,
+        "seed": 42
+    },
+    "performance": {
+        "TTFT_time": 7493.357421875,
+        "decoding_time": 4586.82421875,
+        "latency_unit": "ms",
+        "decoding_throughput": 13.953009085977413,
+        "throughput_unit": "tokens/s"
+    },
+    "memory_usage": {
+        "load_model_peak_memory": 5.157055854797363,
+        "prefill_peak_memory": 1.0581727027893066,
+        "decoding_peak_memory": 0.014325141906738281,
+        "memory_unit": "GB"
+    },
+    "finegrained": {
+        "components": [
+            "in_proj",
+            "conv1d",
+            "x_proj",
+            "dt_proj",
+            "softplus",
+            "discrete_A",
+            "discrete_B",
+            "deltaB_u",
+            "scan_ssm_update",
+            "scan_matmul",
+            "scan_add_D",
+            "scan_act_gate",
+            "update_ssm_state",
+            "out_proj"
+        ],
+        "prefill_avg_ms": {
+            "in_proj": 0.3737310040742159,
+            "conv1d": 0.14108449965715408,
+            "x_proj": 0.02224950003437698,
+            "dt_proj": 0.031860499642789364,
+            "softplus": 0.011860500264447182,
+            "discrete_A": 1.110859490931034,
+            "discrete_B": 0.39763599587604403,
+            "deltaB_u": 0.8048494914546609,
+            "scan_ssm_update": 0.030798449870026445,
+            "scan_matmul": 0.047207159712968405,
+            "scan_add_D": 0.025079000159166753,
+            "scan_act_gate": 0.097469502245076,
+            "update_ssm_state": 0.006971000104385894,
+            "out_proj": 0.18321199668571353
+        },
+        "prefill_counts": {
+            "in_proj": 64,
+            "conv1d": 64,
+            "x_proj": 64,
+            "dt_proj": 64,
+            "softplus": 64,
+            "discrete_A": 64,
+            "discrete_B": 64,
+            "deltaB_u": 64,
+            "scan_ssm_update": 65536,
+            "scan_matmul": 65536,
+            "scan_add_D": 64,
+            "scan_act_gate": 64,
+            "update_ssm_state": 64,
+            "out_proj": 64
+        },
+        "decode_avg_ms": {
+            "in_proj": 0.08310940451519855,
+            "conv1d": 0.08960368099360494,
+            "x_proj": 0.04459890598991478,
+            "dt_proj": 0.05135057870120363,
+            "softplus": 0.022624195214120846,
+            "discrete_A": 0.036832797089118685,
+            "discrete_B": 0.03512576571392856,
+            "deltaB_u": 0.03243588285977239,
+            "scan_ssm_update": 0.034742335970349814,
+            "scan_matmul": 0.04836656271982065,
+            "scan_add_D": 0.038538726772458176,
+            "scan_act_gate": 0.03219505484094043,
+            "update_ssm_state": 0.026601539154853526,
+            "out_proj": 0.059667250375241565
+        },
+        "decode_counts": {
+            "in_proj": 4096,
+            "conv1d": 4096,
+            "x_proj": 4096,
+            "dt_proj": 4096,
+            "softplus": 4096,
+            "discrete_A": 4096,
+            "discrete_B": 4096,
+            "deltaB_u": 4096,
+            "scan_ssm_update": 4096,
+            "scan_matmul": 4096,
+            "scan_add_D": 4096,
+            "scan_act_gate": 4096,
+            "update_ssm_state": 4096,
+            "out_proj": 4096
+        },
+        "latency_unit": "ms",
+        "detail_enabled": false
+    }
+}
