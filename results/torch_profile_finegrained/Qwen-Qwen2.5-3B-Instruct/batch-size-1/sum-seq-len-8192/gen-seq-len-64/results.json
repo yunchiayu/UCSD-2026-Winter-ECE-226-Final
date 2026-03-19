@@ -8,19 +8,25 @@
         "seed": 42
     },
     "performance": {
-        "TTFT_time": 466.25970458984375,
-        "decoding_time": 2184.005615234375,
-        "latency_unit": "ms",
-        "decoding_throughput": 29.303953961277653,
-        "throughput_unit": "tokens/s"
+        "unit": {
+            "time": "ms",
+            "throughput": "tokens/s",
+            "memory": "GB"
+        },
+        "TTFT_time": 462.4895935058594,
+        "decoding_time": 2389.979248046875,
+        "decoding_throughput": 26.77847519065352
     },
     "memory_usage": {
         "load_model_peak_memory": 5.748046875,
         "prefill_peak_memory": 2.6312255859375,
-        "decoding_peak_memory": 0.003927707672119141,
-        "memory_unit": "GB"
+        "decoding_peak_memory": 0.003927707672119141
     },
     "finegrained": {
+        "unit": {
+            "time": "ms",
+            "throughput": "tokens/s"
+        },
         "components": [
             "wq",
             "wk",
@@ -34,18 +40,18 @@
             "w3",
             "qK_softmax_sV_fused"
         ],
-        "prefill_avg_ms": {
-            "wq": 0.42383110854360795,
-            "wk": 0.059733334411349565,
-            "wv": 0.05935733413530721,
-            "wo": 0.40992355595032376,
+        "prefill": {
+            "wq": 0.4194675576355722,
+            "wk": 0.058981334066225424,
+            "wv": 0.05898933423062166,
+            "wo": 0.406764443549845,
             "qK": null,
             "softmax": null,
             "sV": null,
-            "w1": 2.1912240187327066,
-            "w2": 2.2356240153312683,
-            "w3": 2.2040115462409124,
-            "qK_softmax_sV_fused": 1.925660447941886
+            "w1": 2.1728906631469727,
+            "w2": 2.203113774458567,
+            "w3": 2.18941601117452,
+            "qK_softmax_sV_fused": 1.911690678861406
         },
         "prefill_counts": {
             "wq": 36,
@@ -60,18 +66,18 @@
             "w3": 36,
             "qK_softmax_sV_fused": 36
         },
-        "decode_avg_ms": {
-            "wq": 0.06147029148269212,
-            "wk": 0.04911052799232291,
-            "wv": 0.048195333552131264,
-            "wo": 0.045368749861760684,
+        "decode": {
+            "wq": 0.06937179151160915,
+            "wk": 0.05277179193560894,
+            "wv": 0.052444472416229675,
+            "wo": 0.04913615248935659,
             "qK": null,
             "softmax": null,
             "sV": null,
-            "w1": 0.07476769620876035,
-            "w2": 0.06702575003954633,
-            "w3": 0.06957572258155172,
-            "qK_softmax_sV_fused": 0.05305545854692658
+            "w1": 0.07801995998791729,
+            "w2": 0.06968638892350201,
+            "w3": 0.07206691701301476,
+            "qK_softmax_sV_fused": 0.05770758344927648
         },
         "decode_counts": {
             "wq": 2304,
@@ -88,7 +94,6 @@
         },
         "fused_attention": true,
         "note": "If qK/softmax/sV are fused (e.g., SDPA/FlashAttention), timings appear under qK_softmax_sV_fused.",
-        "latency_unit": "ms",
         "detail_enabled": false
     }
 }

@@ -17,7 +17,7 @@ BATCH_SIZE=1
 WARMUP_ITERS=20
 SEED=42
 
-export CUDA_VISIBLE_DEVICES=0 # set gpu id
+export CUDA_VISIBLE_DEVICES=1 # set gpu id
 
 python "$PY" \
     --model-name $MODEL_NAME \

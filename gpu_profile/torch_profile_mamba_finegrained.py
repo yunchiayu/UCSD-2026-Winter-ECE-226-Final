@@ -367,16 +367,18 @@ def main(args):
 
     finegrained = {
         "components": component_names,
-        "prefill_avg_ms": prefill_component_avg,
+        "prefill": prefill_component_avg,
         "prefill_counts": prefill_component_counts,
-        "decode_avg_ms": decode_component_avg,
+        "decode": decode_component_avg,
         "decode_counts": decode_component_counts,
-        "latency_unit": "ms",
+        "unit": {
+            "time": "ms",
+        },
         "detail_enabled": include_detail,
     }
     if include_detail:
-        finegrained["prefill_all_ms"] = prefill_component_all
-        finegrained["decode_all_ms"] = decode_component_all
+        finegrained["prefill_all"] = prefill_component_all
+        finegrained["decode_all"] = decode_component_all
 
     output_folder = get_output_folder(args)
     with open(output_folder / "results.json", "w") as f:
@@ -390,21 +392,24 @@ def main(args):
                 "seed": args.seed,
             },
             "performance": {
+                "unit": {
+                    "time": "ms",
+                    "throughput": "tokens/s",
+                    "memory": "GB",
+                },
                 "TTFT_time": TTFT_time,
                 "decoding_time": decoding_time,
-                "latency_unit": "ms",
                 "decoding_throughput": decoding_throughput * 1e3,
-                "throughput_unit": "tokens/s",
             },
             "memory_usage": {
                 "load_model_peak_memory": peak_mem_loadmodel / 1024**3,
                 "prefill_peak_memory": prefill_peak_mem / 1024**3,
                 "decoding_peak_memory": decode_peak_mem / 1024**3,
-                "memory_unit": "GB",
             },
             "finegrained": finegrained,
         }
         json.dump(results, f, indent=4)
+    print(f"Results saved to {output_folder / 'results.json'}")
 
 
 

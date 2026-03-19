@@ -8,17 +8,19 @@
         "seed": 42
     },
     "performance": {
-        "TTFT_time": 15212.18359375,
-        "decoding_time": 4550.556640625,
-        "latency_unit": "ms",
-        "decoding_throughput": 14.06421346976353,
-        "throughput_unit": "tokens/s"
+        "unit": {
+            "time": "ms",
+            "throughput": "tokens/s",
+            "memory": "GB"
+        },
+        "TTFT_time": 15346.369140625,
+        "decoding_time": 4526.29296875,
+        "decoding_throughput": 14.139606172614696
     },
     "memory_usage": {
         "load_model_peak_memory": 5.157055854797363,
         "prefill_peak_memory": 2.1034607887268066,
-        "decoding_peak_memory": 0.014325141906738281,
-        "memory_unit": "GB"
+        "decoding_peak_memory": 0.014325141906738281
     },
     "finegrained": {
         "components": [
@@ -37,21 +39,21 @@
             "update_ssm_state",
             "out_proj"
         ],
-        "prefill_avg_ms": {
-            "in_proj": 0.7179330037906766,
-            "conv1d": 0.2788140024058521,
-            "x_proj": 0.04026250040624291,
-            "dt_proj": 0.051771498983725905,
-            "softplus": 0.019458999391645193,
-            "discrete_A": 2.23869151994586,
-            "discrete_B": 0.7950164983049035,
-            "deltaB_u": 1.605391489341855,
-            "scan_ssm_update": 0.030739986254925356,
-            "scan_matmul": 0.04843155623212425,
-            "scan_add_D": 0.06366149900713935,
-            "scan_act_gate": 0.21051100152544677,
-            "update_ssm_state": 0.007223500084364787,
-            "out_proj": 0.3834555009379983
+        "prefill": {
+            "in_proj": 0.7196994991973042,
+            "conv1d": 0.2766269976273179,
+            "x_proj": 0.04095550032798201,
+            "dt_proj": 0.05386549967806786,
+            "softplus": 0.019595999328885227,
+            "discrete_A": 2.2389669977128506,
+            "discrete_B": 0.7947129942476749,
+            "deltaB_u": 1.6059119775891304,
+            "scan_ssm_update": 0.030913212304810145,
+            "scan_matmul": 0.04917345860109634,
+            "scan_add_D": 0.06233599898405373,
+            "scan_act_gate": 0.2137635003309697,
+            "update_ssm_state": 0.007127000077161938,
+            "out_proj": 0.38430050294846296
         },
         "prefill_counts": {
             "in_proj": 64,
@@ -69,21 +71,21 @@
             "update_ssm_state": 64,
             "out_proj": 64
         },
-        "decode_avg_ms": {
-            "in_proj": 0.08343026392503816,
-            "conv1d": 0.10258593159051088,
-            "x_proj": 0.04460953877878637,
-            "dt_proj": 0.052036500505892036,
-            "softplus": 0.022658492073333036,
-            "discrete_A": 0.03695724240242271,
-            "discrete_B": 0.03565228135948928,
-            "deltaB_u": 0.03279668755885723,
-            "scan_ssm_update": 0.03559502350708499,
-            "scan_matmul": 0.049662711243399826,
-            "scan_add_D": 0.03850221119228081,
-            "scan_act_gate": 0.031941047020154656,
-            "update_ssm_state": 0.02681185164465205,
-            "out_proj": 0.0606073676754022
+        "decode": {
+            "in_proj": 0.08403528735289001,
+            "conv1d": 0.0918384621036239,
+            "x_proj": 0.04536257791733078,
+            "dt_proj": 0.05283718771806889,
+            "softplus": 0.02257302327279831,
+            "discrete_A": 0.0365690938770058,
+            "discrete_B": 0.03480374214177573,
+            "deltaB_u": 0.03157406258151241,
+            "scan_ssm_update": 0.03455889836504866,
+            "scan_matmul": 0.04991157066797314,
+            "scan_add_D": 0.038350289323716424,
+            "scan_act_gate": 0.03226708609827256,
+            "update_ssm_state": 0.026567422090920445,
+            "out_proj": 0.06135277402972861
         },
         "decode_counts": {
             "in_proj": 4096,
@@ -101,7 +103,9 @@
             "update_ssm_state": 4096,
             "out_proj": 4096
         },
-        "latency_unit": "ms",
+        "unit": {
+            "time": "ms"
+        },
         "detail_enabled": false
     }
 }

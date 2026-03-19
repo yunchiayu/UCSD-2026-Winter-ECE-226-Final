@@ -25,7 +25,7 @@ def parse_args():
     parser.add_argument(
         "--show-detail",
         action="store_true",
-        help="Show per-event latency lists in output (prefill_all_ms/decode_all_ms).",
+        help="Show per-event latency lists in output (prefill_all/decode_all).",
     )
     return parser.parse_args()
 
@@ -346,22 +346,25 @@ def main(args):
         h.remove()
 
     finegrained = {
+        "unit": {
+            "time": "ms",
+            "throughput": "tokens/s",
+        },
         "components": component_names,
-        "prefill_avg_ms": prefill_component_avg,
+        "prefill": prefill_component_avg,
         "prefill_counts": prefill_component_counts,
-        "decode_avg_ms": decode_component_avg,
+        "decode": decode_component_avg,
         "decode_counts": decode_component_counts,
         "fused_attention": (
             (prefill_component_counts.get("qK_softmax_sV_fused", 0) or 0) > 0
             or (decode_component_counts.get("qK_softmax_sV_fused", 0) or 0) > 0
         ),
         "note": "If qK/softmax/sV are fused (e.g., SDPA/FlashAttention), timings appear under qK_softmax_sV_fused.",
-        "latency_unit": "ms",
         "detail_enabled": include_detail,
     }
     if include_detail:
-        finegrained["prefill_all_ms"] = prefill_component_all
-        finegrained["decode_all_ms"] = decode_component_all
+        finegrained["prefill_all"] = prefill_component_all
+        finegrained["decode_all"] = decode_component_all
 
     output_folder = get_output_folder(args)
     with open(output_folder / "results.json", "w") as f:
@@ -375,26 +378,21 @@ def main(args):
                 "seed": args.seed,
             },
             "performance": {
+                "unit": {
+                    "time": "ms",
+                    "throughput": "tokens/s",
+                    "memory": "GB",
+                },
                 "TTFT_time": TTFT_time,
                 "decoding_time": decoding_time,
-                "latency_unit": "ms",
                 "decoding_throughput": decoding_throughput * 1e3,
-                "throughput_unit": "tokens/s",
             },
             "memory_usage": {
                 "load_model_peak_memory": peak_mem_loadmodel / 1024**3,
                 "prefill_peak_memory": prefill_peak_mem / 1024**3,
                 "decoding_peak_memory": decode_peak_mem / 1024**3,
-                "memory_unit": "GB",
             },
             "finegrained": finegrained,
-            # "components": {
-            #     "prefill_component_avg": prefill_component_avg,
-            #     "prefill_component_counts": prefill_component_counts,
-            #     "decode_component_avg": decode_component_avg,
-            #     "decode_component_counts": decode_component_counts,
-            # }
-            # "layer_events": layer_events,
         }
         json.dump(results, f, indent=4)
 

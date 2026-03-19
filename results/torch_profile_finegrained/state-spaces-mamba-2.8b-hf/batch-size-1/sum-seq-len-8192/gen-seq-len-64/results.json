@@ -8,17 +8,19 @@
         "seed": 42
     },
     "performance": {
-        "TTFT_time": 61948.13671875,
-        "decoding_time": 4607.61181640625,
-        "latency_unit": "ms",
-        "decoding_throughput": 13.890059004562021,
-        "throughput_unit": "tokens/s"
+        "unit": {
+            "time": "ms",
+            "throughput": "tokens/s",
+            "memory": "GB"
+        },
+        "TTFT_time": 61956.421875,
+        "decoding_time": 4517.7724609375,
+        "decoding_throughput": 14.166273435275915
     },
     "memory_usage": {
         "load_model_peak_memory": 5.157055854797363,
         "prefill_peak_memory": 8.375189304351807,
-        "decoding_peak_memory": 0.014325141906738281,
-        "memory_unit": "GB"
+        "decoding_peak_memory": 0.014325141906738281
     },
     "finegrained": {
         "components": [
@@ -37,21 +39,21 @@
             "update_ssm_state",
             "out_proj"
         ],
-        "prefill_avg_ms": {
-            "in_proj": 2.6793289221823215,
-            "conv1d": 1.0874629970639944,
-            "x_proj": 0.14614350069314241,
-            "dt_proj": 0.3099190043285489,
-            "softplus": 0.1689420009497553,
-            "discrete_A": 9.014913573861122,
-            "discrete_B": 3.179668966680765,
-            "deltaB_u": 6.4313894510269165,
-            "scan_ssm_update": 0.03194446642172366,
-            "scan_matmul": 0.047850107099861816,
-            "scan_add_D": 0.4543455019593239,
-            "scan_act_gate": 0.7908540004864335,
-            "update_ssm_state": 0.007244500076922122,
-            "out_proj": 1.457633512094617
+        "prefill": {
+            "in_proj": 2.693689439445734,
+            "conv1d": 1.086057497188449,
+            "x_proj": 0.14623700105585158,
+            "dt_proj": 0.30968200182542205,
+            "softplus": 0.17176350252702832,
+            "discrete_A": 9.010220050811768,
+            "discrete_B": 3.178972490131855,
+            "deltaB_u": 6.433116994798183,
+            "scan_ssm_update": 0.03178467402187923,
+            "scan_matmul": 0.047922009193365867,
+            "scan_add_D": 0.4574400023557246,
+            "scan_act_gate": 0.8058219971135259,
+            "update_ssm_state": 0.007264000065333676,
+            "out_proj": 1.4559729993343353
         },
         "prefill_counts": {
             "in_proj": 64,
@@ -69,21 +71,21 @@
             "update_ssm_state": 64,
             "out_proj": 64
         },
-        "decode_avg_ms": {
-            "in_proj": 0.08368864673138887,
-            "conv1d": 0.09395461923304538,
-            "x_proj": 0.045912812300230144,
-            "dt_proj": 0.05228211773373914,
-            "softplus": 0.02332881252232255,
-            "discrete_A": 0.037683601811295375,
-            "discrete_B": 0.03653165642492695,
-            "deltaB_u": 0.033216593837551045,
-            "scan_ssm_update": 0.036178132922259465,
-            "scan_matmul": 0.050208211268000014,
-            "scan_add_D": 0.03916414858213102,
-            "scan_act_gate": 0.03245410170302421,
-            "update_ssm_state": 0.02786264048791054,
-            "out_proj": 0.06067893797990109
+        "decode": {
+            "in_proj": 0.0839224280189228,
+            "conv1d": 0.09433583809368429,
+            "x_proj": 0.04465372624235897,
+            "dt_proj": 0.0517395786846464,
+            "softplus": 0.022367351349657838,
+            "discrete_A": 0.036880382946947066,
+            "discrete_B": 0.035509804735738726,
+            "deltaB_u": 0.03286150009989797,
+            "scan_ssm_update": 0.034781695263518486,
+            "scan_matmul": 0.04870110172123532,
+            "scan_add_D": 0.038017937774384336,
+            "scan_act_gate": 0.03178632046092389,
+            "update_ssm_state": 0.02646707055009756,
+            "out_proj": 0.06067929732671473
         },
         "decode_counts": {
             "in_proj": 4096,
@@ -101,7 +103,9 @@
             "update_ssm_state": 4096,
             "out_proj": 4096
         },
-        "latency_unit": "ms",
+        "unit": {
+            "time": "ms"
+        },
         "detail_enabled": false
     }
 }
