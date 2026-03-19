@@ -7,6 +7,9 @@
 *.ckpt
 
 
-results/
+# results/
+
+results/nsight_profile/
+results/torch_profile/
 
 
