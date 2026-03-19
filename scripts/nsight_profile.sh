@@ -12,11 +12,13 @@ BATCH_SIZE=1
 WARMUP_ITERS=20
 SEED=42
 
-export CUDA_VISIBLE_DEVICES=0 # set gpu id  
+export CUDA_VISIBLE_DEVICES=1 # set gpu id  
 
 OUTPUT_DIR="$PRJ_DIR/results/nsight_profile/$MODEL/batch-size-$BATCH_SIZE/sum-seq-len-$SUM_SEQ_LEN/gen-seq-len-$GEN_SEQ_LEN"
 mkdir -p $OUTPUT_DIR
-OUTPUT_FILE="$OUTPUT_DIR/nsys_result"
+
+MODEL_NAME_CLEANED=$(echo $MODEL | tr "/" "-")
+OUTPUT_FILE="$OUTPUT_DIR/nsys_result-$MODEL_NAME_CLEANED-batch-size-$BATCH_SIZE-sum-seq-len-$SUM_SEQ_LEN-gen-seq-len-$GEN_SEQ_LEN"
 
 nsys profile \
     -o $OUTPUT_FILE \

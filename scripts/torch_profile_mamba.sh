@@ -3,13 +3,12 @@ SCRIPT_DIR="$(dirname "$0")"
 PRJ_DIR="$SCRIPT_DIR/.."
 
 # ------ Python script: ------
-PY="$PRJ_DIR/gpu_profile/torch_profile.py"
+PY="$PRJ_DIR/gpu_profile/torch_profile_mamba.py"
 
-# MODEL="Qwen/Qwen2.5-3B-Instruct"
-# MODEL_NAME="state-spaces/mamba2-2.7b"
-# MODEL="state-spaces/mamba-2.8b"
-# MODEL_NAME="state-spaces/mamba-130m"
 MODEL_NAME="state-spaces/mamba-2.8b-hf"
+# MODEL_NAME="state-spaces/mamba2-2.7b-hf"
+
+
 SUM_SEQ_LEN=1024
 GEN_SEQ_LEN=64
 BATCH_SIZE=1
