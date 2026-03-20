@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.legend_handler import HandlerTuple
 import numpy as np
 import argparse
 import yaml
@@ -34,7 +36,7 @@ def get_leaf_dir(root_dir: str, model_name, batch_size, sum_seq_len, gen_seq_len
                 / f"gen-seq-len-{gen_seq_len}"
     return leaf_dir
 
-def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_config: dict):
+def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_config: dict, legend_config: dict):
     # ========== Set global style from config ==========
     fontsize = plot_config.get("fontsize", {})
     plt.rc('axes', labelsize=fontsize.get("labelsize", 18))
@@ -108,18 +110,40 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
                         fontsize=fontsize.get("legend_fontsize", 16),
                         title_fontsize=fontsize.get("legend_title_fontsize", 18))
         ax.add_artist(leg1)
-    
-    # # Draw the legends (only if handles present)
-    # if point_handles:
-    #     leg2 = ax.legend(point_handles, point_labels,
-    #                     loc=legend_cfg.get('loc', 'lower left'),
-    #                     bbox_to_anchor=legend_cfg.get('bbox_to_anchor', (0.02, 0.02)),
-    #                     ncol=legend_cfg.get('ncol', 2),
-    #                     frameon=legend_cfg.get('frameon', False),
-    #                     fontsize=fontsize.get("legend_fontsize", 16),
-    #                     title_fontsize=fontsize.get("legend_title_fontsize", 18))
-    #     ax.add_artist(leg2)
-    
+
+    # Add legend below figure for phase symbols and model color palettes
+    fig.subplots_adjust(bottom=0.20)
+
+    phase_handles = legend_config["phase_legend"]["handles"]
+    phase_leg = fig.legend(
+        phase_handles, ['Prefill', 'Decode'],
+        loc='lower left',
+        bbox_to_anchor=(0.10, 0.08),
+        ncol=2,
+        frameon=False,
+        title='Phase',
+        fontsize=fontsize.get("legend_fontsize", 16),
+        title_fontsize=fontsize.get("legend_title_fontsize", 18),
+    )
+    fig.add_artist(phase_leg)
+
+    model_handles = legend_config["model_legend"]["handles"]
+    model_labels = legend_config["model_legend"]["labels"]
+
+    if model_handles:
+        model_leg = fig.legend(
+            model_handles, model_labels,
+            handler_map={tuple: HandlerTuple(ndivide=None, pad=0.3)},
+            loc='lower right',
+            bbox_to_anchor=(0.90, 0.08),
+            ncol=min(2, len(model_handles)),
+            frameon=False,
+            title='Models (Prompt Length: 1024, 2048, 4096, 8192)',
+            fontsize=fontsize.get("legend_fontsize", 16),
+            title_fontsize=fontsize.get("legend_title_fontsize", 18),
+        )
+        fig.add_artist(model_leg)
+
     plt.savefig(output_path, dpi=plot_config.get('dpi', 300), bbox_inches='tight')
     return fig, ax
 
@@ -167,6 +191,7 @@ def main(args):
 
     ]
     symbols = ["o", "*", "o", "s"] #{'triangle': '^', 'circle': 'o', 'square': 's'},
+    
     for model_idx, model_name in enumerate(args.model_name_list): 
         for sum_seq_len_idx, sum_seq_len in enumerate(args.sum_seq_len_list):
             roofline_data_dir = get_leaf_dir(args.roofline_data_dir, model_name, args.batch_size, sum_seq_len, args.gen_seq_len)
@@ -204,11 +229,51 @@ def main(args):
                     print(f"Within roofline: {kernel['name']:10s} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
                 point_datas.append(point)
 
+    legends = {
+        "phase_legend": {},
+        "model_legend": {},
+    }
+    # Legend setting
+    model_handles = []
+    model_labels = []
+    for model_idx, model_name in enumerate(args.model_name_list):
+        if model_idx >= len(model_colors):
+            break
+        palette = model_colors[model_idx]
+        handle_tuple = tuple(
+            Line2D([0], [0], marker='s', linestyle='None', markersize=6,
+                   markerfacecolor=c, markeredgecolor='none')
+            for c in palette
+        )
+
+        # label
+        if model_name == "Qwen-Qwen2.5-3B-Instruct":
+            model_label = "Qwen2.5-3B-Instruct"
+        else:
+            model_label = model_name
+        model_handles.append(handle_tuple)
+        model_labels.append(model_label)
+    phase_handles = [
+        Line2D([0], [0], marker='o', linestyle='None', markerfacecolor='black',
+               markeredgecolor='black', markersize=7, label='Prefill'),
+        Line2D([0], [0], marker='^', linestyle='None', markerfacecolor='black',
+               markeredgecolor='black', markersize=7, label='Decode'),
+    ]
+    legend_config = {
+        "phase_legend": {
+            "handles": phase_handles,
+            "labels": ['Prefill', 'Decode'],
+        },
+        "model_legend": {
+            "handles": model_handles,
+            "labels": model_labels,
+        },
+    }
+    
 
 
 
-
-    plot_roofline(args, hardware_configs, point_datas, args.output_path, plot_config)
+    plot_roofline(args, hardware_configs, point_datas, args.output_path, plot_config, legend_config)
     print(f"Saved figure to {args.output_path}")
 
 
