@@ -3,26 +3,20 @@ from pathlib import Path
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output-dir", type=str, default="./results/torch_profile")
-    parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-3B-Instruct")
+    parser.add_argument("--torch-profile-dir", type=str, default="./results/torch_profile")
+    parser.add_argument("--output-dir", type=str, default="./figures/model_ttft_and_peak_memory")
+    parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-3B-Instruct") # Qwen/Qwen2.5-3B-Instruct, state-spaces/mamba-2.8b-hf, fla-hub/rwkv7-2.9B-world
     return parser.parse_args()
 
 
-def get_output_folder(
-    output_dir: str,
-    model: str,
-    batch_size: int,
-    sum_seq_len: int,
-    gen_seq_len: int,
-):
-    output_dir = Path(output_dir)
-    output_dir = output_dir / model.replace("/", "-") \
-                 / f"batch-size-{batch_size}" \
-                 / f"sum-seq-len-{sum_seq_len}" \
-                 / f"gen-seq-len-{gen_seq_len}"
- 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    return output_dir
+def get_leaf_dir(root_dir: str, model_name, batch_size, sum_seq_len, gen_seq_len):
+    root_dir = Path(root_dir)
+    leaf_dir = root_dir \
+                / model_name.replace("/", "-") \
+                / f"batch-size-{batch_size}" \
+                / f"sum-seq-len-{sum_seq_len}" \
+                / f"gen-seq-len-{gen_seq_len}"
+    return leaf_dir
 
 
 def plot_peak_memory_and_latency(args):
@@ -43,14 +37,8 @@ def plot_peak_memory_and_latency(args):
     missing = []
 
     for sum_seq_len in sum_seq_len_list:
-        results_path = (
-            Path(args.output_dir)
-            / model.replace("/", "-")
-            / f"batch-size-{batch_size}"
-            / f"sum-seq-len-{sum_seq_len}"
-            / f"gen-seq-len-{gen_seq_len}"
-            / "results.json"
-        )
+        results_dir = get_leaf_dir(args.torch_profile_dir, model, batch_size, sum_seq_len, gen_seq_len)
+        results_path = results_dir / "results.json"
         if not results_path.exists():
             missing.append(str(results_path))
             continue
@@ -89,13 +77,13 @@ def plot_peak_memory_and_latency(args):
 
     bar_colors = {
         "Model Weight": "#4C78A8",
-        "KV Cache": "#f2cf41",
+        "Cache": "#f2cf41",
         # "prefill": "#F58518",
         # "decode": "#54A24B",
     }
 
     ax.bar(x, model_weight_arr, label="Model Weight", color=bar_colors["Model Weight"])
-    ax.bar(x, prefill_arr, bottom=model_weight_arr, label="KV Cache", color=bar_colors["KV Cache"])
+    ax.bar(x, prefill_arr, bottom=model_weight_arr, label="Cache", color=bar_colors["Cache"])
     # ax.bar(
     #     x,
     #     decode_arr,
@@ -120,9 +108,19 @@ def plot_peak_memory_and_latency(args):
 
     fig.tight_layout()
 
+
+
+
     save_dir = Path(args.output_dir) / model.replace("/", "-")
     save_dir.mkdir(parents=True, exist_ok=True)
-    save_path = save_dir / "peak_memory_ttft.png"
+
+    model_name_table = {
+        "Qwen/Qwen2.5-3B-Instruct": "Qwen2.5-3B-Instruct",
+        "state-spaces/mamba-2.8b-hf": "Mamba-2.8b-hf",
+        "fla-hub/rwkv7-2.9B-world": "RWKV-2.9B-World",
+    }
+
+    save_path = save_dir / f"peak_memory_ttft_{model_name_table[model]}.png"
     fig.savefig(save_path, dpi=300, bbox_inches="tight")
     print(f"Saved figure to {save_path}")
     # plt.show()

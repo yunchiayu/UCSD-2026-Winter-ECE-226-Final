@@ -59,6 +59,20 @@ def main(args):
             dtype=torch.float16,
             device_map=DEVICE
         )
+    elif "rwkv" in args.model_name:
+        from transformers import AutoModelForCausalLM
+        load_kwargs = {
+            "trust_remote_code": True,
+            "torch_dtype": torch.float16,
+            "low_cpu_mem_usage": True,
+            "device_map": DEVICE,
+        }
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model_name,
+            # dtype=torch.float16,
+            # device_map=DEVICE
+            **load_kwargs
+        )
     else:
         raise ValueError(f"Model {args.model_name} not supported")
 
