@@ -2,11 +2,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 import yaml
+import json
 from pathlib import Path
+from typing import List
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--hardware-config-path", type=str, default="./gpu_simulation/hardware_config/RTX4090.yaml")
+    parser.add_argument("--roofline-data-dir", type=str, default="./results/roofline_data")
+    parser.add_argument("--model-name-list", type=List[str], default=["Qwen-Qwen2.5-3B-Instruct"])
+    parser.add_argument("--sum-seq-len-list", type=List[int], default=[1024, 2048, 4096, 8192]) # 1024, 2048, 4096, 8192
+    parser.add_argument("--gen-seq-len", type=int, default=64)
+    parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--output-path", type=str, default="./figures/roofline.png")
     return parser.parse_args()
 
@@ -14,7 +21,20 @@ def load_yaml(path: str) -> dict:
     with Path(path).open("r", encoding="utf-8") as handle:
         return yaml.load(handle, Loader=yaml.FullLoader)
 
-def plot_roofline(args, hardware_configs, output_path: str, plot_config: dict):
+def load_json(path: str) -> dict:
+    with Path(path).open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+def get_leaf_dir(root_dir: str, model_name, batch_size, sum_seq_len, gen_seq_len):
+    root_dir = Path(root_dir)
+    leaf_dir = root_dir \
+                / model_name.replace("/", "-") \
+                / f"batch-size-{batch_size}" \
+                / f"sum-seq-len-{sum_seq_len}" \
+                / f"gen-seq-len-{gen_seq_len}"
+    return leaf_dir
+
+def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_config: dict):
     # ========== Set global style from config ==========
     fontsize = plot_config.get("fontsize", {})
     plt.rc('axes', labelsize=fontsize.get("labelsize", 18))
@@ -49,19 +69,25 @@ def plot_roofline(args, hardware_configs, output_path: str, plot_config: dict):
         pf = hw['peak_compute']
         pbw = hw['peak_bandwidth']
         knee = pf / pbw
-        xs = np.logspace(np.log10(ax.get_xlim()[0]), np.log10(ax.get_xlim()[1]), 200)
+        xs = np.logspace(np.log10(ax.get_xlim()[0]), np.log10(ax.get_xlim()[1]), 5000)
         ys = np.minimum(pbw * xs, pf)
-        color = plot_config['color']['roofline']
+        color = hw['color']
         roofline = ax.plot(xs, ys, color=color, linewidth=2, label=hw["name"])[0]
         roofline_handles.append(roofline)
         roofline_labels.append(hw["name"]) 
-    ymin, _ = ax.get_ylim()
-    ax.plot([knee, knee], [ymin, pf], linestyle='--', color=color)
-    ax.axhline(pbw * knee, linestyle='--', color=color)
-    ax.text(knee * 1.02, ymin * 1.1, f'{knee:.2f}', rotation=0, va='bottom', ha='center', color=color, zorder=5)
-    ax.text(0.085, pf * 1.04, f'{pf:.1f}', rotation=0, va='bottom', ha='right',
-            color=color, transform=ax.get_yaxis_transform(), zorder=5, clip_on=False)
-    
+        ymin, _ = ax.get_ylim()
+        ax.plot([knee, knee], [ymin, pf], linestyle='--', color=color)
+        ax.axhline(pbw * knee, linestyle='--', color=color)
+        ax.text(knee * 1.02, ymin * 1.1, f'{knee:.2f}', rotation=0, va='bottom', ha='center', color=color, zorder=5)
+        ax.text(0.085, pf * 1.04, f'{pf:.1f}', rotation=0, va='bottom', ha='right',
+                color=color, transform=ax.get_yaxis_transform(), zorder=5, clip_on=False)
+
+    # Plot each point
+    for point_data in point_datas:
+        sc = ax.scatter(point_data["x-axis"], point_data["y-axis"], color=point_data["color"], marker=point_data["symbol"], label=point_data["label"], s=point_data["symbol_size"], linewidth=0.5)
+        point_handles.append(sc)
+        point_labels.append(point_data["label"])
+
     # Labels
     ax.set_xlabel(plot_config.get("xlabel", 'Arithmetic Intensity (FLOPs/Byte)'))
     ax.set_ylabel(plot_config.get("ylabel", 'Performance (TFLOPS)'))
@@ -82,6 +108,17 @@ def plot_roofline(args, hardware_configs, output_path: str, plot_config: dict):
                         fontsize=fontsize.get("legend_fontsize", 16),
                         title_fontsize=fontsize.get("legend_title_fontsize", 18))
         ax.add_artist(leg1)
+    
+    # # Draw the legends (only if handles present)
+    # if point_handles:
+    #     leg2 = ax.legend(point_handles, point_labels,
+    #                     loc=legend_cfg.get('loc', 'lower left'),
+    #                     bbox_to_anchor=legend_cfg.get('bbox_to_anchor', (0.02, 0.02)),
+    #                     ncol=legend_cfg.get('ncol', 2),
+    #                     frameon=legend_cfg.get('frameon', False),
+    #                     fontsize=fontsize.get("legend_fontsize", 16),
+    #                     title_fontsize=fontsize.get("legend_title_fontsize", 18))
+    #     ax.add_artist(leg2)
     
     plt.savefig(output_path, dpi=plot_config.get('dpi', 300), bbox_inches='tight')
     return fig, ax
@@ -106,15 +143,72 @@ def main(args):
             "xlim": (0.1, 10000),
             "ylim": (0.1, 10000),
         },
-        "symbol_map": {'triangle': '^', 'circle': 'o', 'square': 's'},
         "color": {
             "roofline": "#4A8462",
         }
     }
 
+    # Load hardware config
     hardware_config_dict = load_yaml(args.hardware_config_path)
-    hardware_configs = [hardware_config_dict['GPU']]
-    plot_roofline(args, hardware_configs, args.output_path, plot_config)
+    hw = hardware_config_dict['GPU']
+    hw["color"] = "#4A8462"
+    hardware_configs = [hw]
+
+    # Load Model roofline data
+    point_datas = []
+    # model_colors = ["#9467bd", "#8c564b"]
+    model_colors = [
+        # {
+        #     "prefill": ["#BFDBFE", "#60A5FA", "#2563EB", "#1E3A8A"],
+        #     "decode": ["#E8F5E9", "#A5D6A7", "#66BB6A", "#2E7D32"],
+        # },
+        ["#BFDBFE", "#60A5FA", "#2563EB", "#1E3A8A"],
+        ["#E8F5E9", "#A5D6A7", "#66BB6A", "#2E7D32"],
+
+    ]
+    symbols = ["o", "*", "o", "s"] #{'triangle': '^', 'circle': 'o', 'square': 's'},
+    for model_idx, model_name in enumerate(args.model_name_list): 
+        for sum_seq_len_idx, sum_seq_len in enumerate(args.sum_seq_len_list):
+            roofline_data_dir = get_leaf_dir(args.roofline_data_dir, model_name, args.batch_size, sum_seq_len, args.gen_seq_len)
+            roofline_data_path = roofline_data_dir / "results.json"
+            roofline_data = load_json(roofline_data_path)
+            
+            for kernel in roofline_data["kernels"]:
+                point_label = ""
+                # point_label = f"{kernel['name']} ({kernel['phase']})"
+
+                if kernel["name"] == "overall": continue
+
+                if kernel["phase"] == "prefill":
+                    symbol = "o"
+                elif kernel["phase"] == "decode":
+                    symbol = "^"
+                symbol_size = 72
+
+                color = model_colors[model_idx][sum_seq_len_idx]
+
+                point = {
+                    "y-axis": kernel["throughput"], 
+                    "x-axis": kernel["arithmetic_intensity"],
+                    "label": point_label,
+                    "color": color,
+                    "symbol": symbol,
+                    "symbol_size": symbol_size,
+                }
+
+                # rooflien check
+                roof = min(hw["peak_compute"], hw["peak_bandwidth"]*kernel["arithmetic_intensity"] )
+                if kernel["throughput"] > roof:
+                    print(f"Out of roofline: {kernel['name']} ({kernel['phase']})")
+                else:
+                    print(f"Within roofline: {kernel['name']:10s} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
+                point_datas.append(point)
+
+
+
+
+
+    plot_roofline(args, hardware_configs, point_datas, args.output_path, plot_config)
     print(f"Saved figure to {args.output_path}")
 
 

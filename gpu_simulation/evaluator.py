@@ -84,6 +84,14 @@ class Evaluator:
                 output_size = B * (M * K) * self.element_size
                 data_transfer_size = weight_size + input_size + output_size # bytes
                 arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
+                metadata = {
+                    "params": {
+                        "B": B,
+                        "M": M,
+                        "N": N,
+                        "K": K,
+                    },
+                }
             elif op_data["type"] == "qK_softmax_sV_fused":
                 B, H_kv, num_q_per_kv, Lin, D_h = op_data["params"]["B"], op_data["params"]["H_kv"], op_data["params"]["num_q_per_kv"], op_data["params"]["Lin"], op_data["params"]["D_h"]
                 operation_time = self.evaluate_qK_softmax_sV_fused(B, H_kv, num_q_per_kv, Lin, D_h)
@@ -95,6 +103,15 @@ class Evaluator:
                 output_size = B * num_q_per_kv * H_kv * D_h
                 data_transfer_size = KV_cache_size + input_size + output_size # bytes
                 arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
+                metadata = {
+                    "params": {
+                        "B": B,
+                        "H_kv": H_kv,
+                        "num_q_per_kv": num_q_per_kv,
+                        "Lin": Lin,
+                        "D_h": D_h,
+                    },
+                }
             prefill_time += operation_time
             prefill_flops += num_flops
             prefill_data_transfer_size += data_transfer_size
@@ -103,6 +120,7 @@ class Evaluator:
                 "flops": num_flops * 1e-9, # GFLOPs
                 "throughput": throughput,
                 "arithmetic_intensity": arithmetic_intensity,
+                "metadata": metadata,
             }
         prefill_throughput = prefill_flops / prefill_time * 1e-9 # TFLOPS/s
         prefill_arithmetic_intensity = prefill_flops / prefill_data_transfer_size # FLOPS/byte
@@ -124,17 +142,42 @@ class Evaluator:
                 operation_time = self.evaluate_gemm(B, M, N, K)
                 num_flops = 2 * M * N * K
                 throughput = num_flops / operation_time * 1e-9 # TFLOPS/s
+
+                weight_size = B * (N * K) * self.element_size
+                input_size = B * (M * N) * self.element_size
+                output_size = B * (M * K) * self.element_size
+                data_transfer_size = weight_size + input_size + output_size # bytes
+                arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
+                metadata = {
+                    "params": {
+                        "B": B,
+                        "M": M,
+                        "N": N,
+                        "K": K,
+                    },
+                }
             elif op_data["type"] == "qK_softmax_sV_fused":
                 B, H_kv, num_q_per_kv, Lin, D_h = op_data["params"]["B"], op_data["params"]["H_kv"], op_data["params"]["num_q_per_kv"], op_data["params"]["Lin"], op_data["params"]["D_h"]
                 operation_time = self.evaluate_qK_softmax_sV_fused(B, H_kv, num_q_per_kv, Lin, D_h)
                 num_flops = 2 * (B * H_kv) * num_q_per_kv * Lin * D_h
                 throughput = num_flops / operation_time * 1e-9 # TFLOPS/s
-                arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
+                
                 
                 KV_cache_size = 2 * B * H_kv * Lin * D_h * self.element_size # 2 for K & V
                 input_size = B * num_q_per_kv * H_kv * D_h
                 output_size = B * num_q_per_kv * H_kv * D_h
                 data_transfer_size = KV_cache_size + input_size + output_size # bytes
+                arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
+
+                metadata = {
+                    "params": {
+                        "B": B,
+                        "H_kv": H_kv,
+                        "num_q_per_kv": num_q_per_kv,
+                        "Lin": Lin,
+                        "D_h": D_h,
+                    },
+                }
             decode_time += operation_time
             decode_flops += num_flops
             decode_data_transfer_size += data_transfer_size
@@ -143,6 +186,7 @@ class Evaluator:
                 "flops": num_flops * 1e-9, # GFLOPs
                 "throughput": throughput,
                 "arithmetic_intensity": arithmetic_intensity,
+                "metadata": metadata,
             }
         decode_throughput = decode_flops / decode_time * 1e-9 # TFLOPS/s
         decode_arithmetic_intensity = decode_flops / decode_data_transfer_size # FLOPS/byte

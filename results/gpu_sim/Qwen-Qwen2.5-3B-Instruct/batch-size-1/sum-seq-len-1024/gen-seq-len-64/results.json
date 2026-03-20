@@ -33,49 +33,114 @@
                         "time": 0.016777216,
                         "flops": 8.589934592,
                         "throughput": 511.99999999999994,
-                        "arithmetic_intensity": 512.0
+                        "arithmetic_intensity": 512.0,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1024,
+                                "N": 2048,
+                                "K": 2048
+                            }
+                        }
                     },
                     "wk": {
                         "time": 0.0057671680000000005,
                         "flops": 1.073741824,
                         "throughput": 186.1818181818182,
-                        "arithmetic_intensity": 186.1818181818182
+                        "arithmetic_intensity": 186.1818181818182,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1024,
+                                "N": 256,
+                                "K": 2048
+                            }
+                        }
                     },
                     "wv": {
                         "time": 0.0057671680000000005,
                         "flops": 1.073741824,
                         "throughput": 186.1818181818182,
-                        "arithmetic_intensity": 186.1818181818182
+                        "arithmetic_intensity": 186.1818181818182,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1024,
+                                "N": 256,
+                                "K": 2048
+                            }
+                        }
                     },
                     "wo": {
                         "time": 0.016777216,
                         "flops": 8.589934592,
                         "throughput": 511.99999999999994,
-                        "arithmetic_intensity": 512.0
+                        "arithmetic_intensity": 512.0,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1024,
+                                "N": 2048,
+                                "K": 2048
+                            }
+                        }
                     },
                     "w1": {
                         "time": 0.071827456,
                         "flops": 46.170898432,
                         "throughput": 642.8029197080292,
-                        "arithmetic_intensity": 642.8029197080292
+                        "arithmetic_intensity": 642.8029197080292,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1024,
+                                "N": 2048,
+                                "K": 11008
+                            }
+                        }
                     },
                     "w3": {
                         "time": 0.071827456,
                         "flops": 46.170898432,
                         "throughput": 642.8029197080292,
-                        "arithmetic_intensity": 642.8029197080292
+                        "arithmetic_intensity": 642.8029197080292,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1024,
+                                "N": 2048,
+                                "K": 11008
+                            }
+                        }
                     },
                     "w2": {
                         "time": 0.071827456,
                         "flops": 46.170898432,
                         "throughput": 642.8029197080292,
-                        "arithmetic_intensity": 642.8029197080292
+                        "arithmetic_intensity": 642.8029197080292,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1024,
+                                "N": 11008,
+                                "K": 2048
+                            }
+                        }
                     },
                     "qK_softmax_sV_fused": {
                         "time": 0.0010526720000000002,
                         "flops": 0.004194304,
                         "throughput": 3.9844357976653693,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 3.9844357976653697,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "H_kv": 2,
+                                "num_q_per_kv": 8,
+                                "Lin": 1024,
+                                "D_h": 128
+                            }
+                        }
                     }
                 }
             },
@@ -84,56 +149,121 @@
                     "time": 0.15529728,
                     "flops": 0.15833497600000002,
                     "throughput": 1.0195605228887459,
-                    "arithmetic_intensity": 18.801556420233464
+                    "arithmetic_intensity": 1.019560522888746
                 },
                 "breakdown": {
                     "wq": {
                         "time": 0.008396800000000001,
                         "flops": 0.008388608,
                         "throughput": 0.9990243902439024,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 0.9990243902439024,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 2048,
+                                "K": 2048
+                            }
+                        }
                     },
                     "wk": {
                         "time": 0.001053184,
                         "flops": 0.001048576,
                         "throughput": 0.9956246961594556,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 0.9956246961594555,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 256,
+                                "K": 2048
+                            }
+                        }
                     },
                     "wv": {
                         "time": 0.001053184,
                         "flops": 0.001048576,
                         "throughput": 0.9956246961594556,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 0.9956246961594555,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 256,
+                                "K": 2048
+                            }
+                        }
                     },
                     "wo": {
                         "time": 0.008396800000000001,
                         "flops": 0.008388608,
                         "throughput": 0.9990243902439024,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 0.9990243902439024,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 2048,
+                                "K": 2048
+                            }
+                        }
                     },
                     "w1": {
                         "time": 0.04511488,
                         "flops": 0.045088768,
                         "throughput": 0.9994212109175509,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 0.9994212109175509,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 2048,
+                                "K": 11008
+                            }
+                        }
                     },
                     "w3": {
                         "time": 0.04511488,
                         "flops": 0.045088768,
                         "throughput": 0.9994212109175509,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 0.9994212109175509,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 2048,
+                                "K": 11008
+                            }
+                        }
                     },
                     "w2": {
                         "time": 0.04511488,
                         "flops": 0.045088768,
                         "throughput": 0.9994212109175509,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 0.9994212109175509,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 11008,
+                                "K": 2048
+                            }
+                        }
                     },
                     "qK_softmax_sV_fused": {
                         "time": 0.0010526720000000002,
                         "flops": 0.004194304,
                         "throughput": 3.9844357976653693,
-                        "arithmetic_intensity": 3.9844357976653697
+                        "arithmetic_intensity": 3.9844357976653697,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "H_kv": 2,
+                                "num_q_per_kv": 8,
+                                "Lin": 1024,
+                                "D_h": 128
+                            }
+                        }
                     }
                 }
             }
