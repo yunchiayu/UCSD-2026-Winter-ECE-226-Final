@@ -12,7 +12,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--hardware-config-path", type=str, default="./gpu_simulation/hardware_config/RTX4090.yaml")
     parser.add_argument("--roofline-data-dir", type=str, default="./results/roofline_data")
-    parser.add_argument("--model-name-list", type=List[str], default=["state-spaces-mamba-2.8b-hf"]) # ["Qwen-Qwen2.5-3B-Instruct", "state-spaces-mamba-2.8b-hf"]
+    parser.add_argument("--model-name-list", type=List[str], default=["Qwen-Qwen2.5-3B-Instruct", "state-spaces-mamba-2.8b-hf"]) # ["Qwen-Qwen2.5-3B-Instruct", "state-spaces-mamba-2.8b-hf"]
     parser.add_argument("--sum-seq-len-list", type=List[int], default=[1024, 2048, 4096, 8192]) # 1024, 2048, 4096, 8192
     parser.add_argument("--gen-seq-len", type=int, default=64)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -225,9 +225,22 @@ def main(args):
                 #     print(f"Within roofline: {kernel['name']:10s} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
 
 
-                if kernel["throughput"] < 10 and kernel["arithmetic_intensity"] > 661:
-                    print(f"{kernel['name']} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
-                
+                # if kernel["throughput"] < 10 and kernel["arithmetic_intensity"] > 661:
+                #     print(f"{kernel['name']} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
+
+                # Kernel Check
+                if sum_seq_len == 8192:
+                    if model_name == "Qwen-Qwen2.5-3B-Instruct":
+                        if kernel["phase"] == "prefill":
+                            if kernel["arithmetic_intensity"] < 10:
+                                print(f"{kernel['name']} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
+                    elif model_name == "state-spaces-mamba-2.8b-hf":
+                        if kernel["phase"] == "prefill":
+                            if 5 < kernel["arithmetic_intensity"] < 10:
+                                print(f"{kernel['name']} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
+                            elif kernel["arithmetic_intensity"] < 5:
+                                print(f"{kernel['name']} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
+                    
 
     legends = {
         "phase_legend": {},
