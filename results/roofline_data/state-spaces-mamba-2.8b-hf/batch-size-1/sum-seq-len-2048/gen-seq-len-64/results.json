@@ -26,6 +26,7 @@
         {
             "phase": "prefill",
             "name": "in_proj",
+            "type": "gemm",
             "flops": 107.37418240000001,
             "arithmetic_intensity": 1024.0,
             "time": 0.7196994991973042,
@@ -36,6 +37,7 @@
         {
             "phase": "prefill",
             "name": "conv1d",
+            "type": "conv1d",
             "flops": 0.08388608,
             "arithmetic_intensity": 0.8,
             "time": 0.2766269976273179,
@@ -46,6 +48,7 @@
         {
             "phase": "prefill",
             "name": "x_proj",
+            "type": "gemm",
             "flops": 4.0265318400000005,
             "arithmetic_intensity": 169.72375690607734,
             "time": 0.04095550032798201,
@@ -56,6 +59,7 @@
         {
             "phase": "prefill",
             "name": "dt_proj",
+            "type": "gemm",
             "flops": 3.3554432000000003,
             "arithmetic_intensity": 144.22535211267606,
             "time": 0.05386549967806786,
@@ -66,6 +70,7 @@
         {
             "phase": "prefill",
             "name": "discrete_A",
+            "type": "mamba_elementwise",
             "flops": 0.16777216,
             "arithmetic_intensity": 7.211267605633803,
             "time": 2.2389669977128506,
@@ -76,6 +81,7 @@
         {
             "phase": "prefill",
             "name": "discrete_B",
+            "type": "mamba_elementwise",
             "flops": 0.16777216,
             "arithmetic_intensity": 7.211267605633803,
             "time": 0.7947129942476749,
@@ -86,6 +92,7 @@
         {
             "phase": "prefill",
             "name": "deltaB_u",
+            "type": "mamba_elementwise",
             "flops": 0.16777216,
             "arithmetic_intensity": 7.211267605633803,
             "time": 1.6059119775891304,
@@ -96,6 +103,7 @@
         {
             "phase": "prefill",
             "name": "scan_ssm_update",
+            "type": "mamba_elementwise",
             "flops": 8.192e-05,
             "arithmetic_intensity": 0.0035211267605633804,
             "time": 0.030913212304810145,
@@ -106,6 +114,7 @@
         {
             "phase": "prefill",
             "name": "scan_matmul",
+            "type": "gemm",
             "flops": 0.00016384,
             "arithmetic_intensity": 0.9410034920051461,
             "time": 0.04917345860109634,
@@ -116,6 +125,7 @@
         {
             "phase": "prefill",
             "name": "scan_add_D",
+            "type": "mamba_elementwise",
             "flops": 8.192e-05,
             "arithmetic_intensity": 0.47050174600257305,
             "time": 0.06233599898405373,
@@ -126,6 +136,7 @@
         {
             "phase": "prefill",
             "name": "scan_act_gate",
+            "type": "mamba_elementwise",
             "flops": 8.192e-05,
             "arithmetic_intensity": 0.47050174600257305,
             "time": 0.2137635003309697,
@@ -136,6 +147,7 @@
         {
             "phase": "prefill",
             "name": "out_proj",
+            "type": "gemm",
             "flops": 53.687091200000005,
             "arithmetic_intensity": 930.9090909090909,
             "time": 0.38430050294846296,
@@ -156,6 +168,7 @@
         {
             "phase": "decode",
             "name": "in_proj",
+            "type": "gemm",
             "flops": 0.052428800000000005,
             "arithmetic_intensity": 0.9995119570522206,
             "time": 0.08403528735289001,
@@ -166,6 +179,7 @@
         {
             "phase": "decode",
             "name": "x_proj",
+            "type": "gemm",
             "flops": 0.0019660800000000003,
             "arithmetic_intensity": 0.9946253966198277,
             "time": 0.04536257791733078,
@@ -176,6 +190,7 @@
         {
             "phase": "decode",
             "name": "dt_proj",
+            "type": "gemm",
             "flops": 0.0016384000000000001,
             "arithmetic_intensity": 0.9935959635163982,
             "time": 0.05283718771806889,
@@ -186,6 +201,7 @@
         {
             "phase": "decode",
             "name": "discrete_A",
+            "type": "mamba_elementwise",
             "flops": 0.0016384000000000001,
             "arithmetic_intensity": 0.9935959635163982,
             "time": 0.0365690938770058,
@@ -196,6 +212,7 @@
         {
             "phase": "decode",
             "name": "discrete_B",
+            "type": "mamba_elementwise",
             "flops": 0.0016384000000000001,
             "arithmetic_intensity": 0.9935959635163982,
             "time": 0.03480374214177573,
@@ -206,6 +223,7 @@
         {
             "phase": "decode",
             "name": "deltaB_u",
+            "type": "mamba_elementwise",
             "flops": 0.0016384000000000001,
             "arithmetic_intensity": 0.9935959635163982,
             "time": 0.03157406258151241,
@@ -216,6 +234,7 @@
         {
             "phase": "decode",
             "name": "scan_ssm_update",
+            "type": "mamba_elementwise",
             "flops": 0.0016384000000000001,
             "arithmetic_intensity": 0.9935959635163982,
             "time": 0.03455889836504866,
@@ -226,6 +245,7 @@
         {
             "phase": "decode",
             "name": "scan_matmul",
+            "type": "gemm",
             "flops": 0.00016384,
             "arithmetic_intensity": 0.9410034920051461,
             "time": 0.04991157066797314,
@@ -236,6 +256,7 @@
         {
             "phase": "decode",
             "name": "scan_add_D",
+            "type": "mamba_elementwise",
             "flops": 0.00016384,
             "arithmetic_intensity": 0.9410034920051461,
             "time": 0.038350289323716424,
@@ -246,6 +267,7 @@
         {
             "phase": "decode",
             "name": "scan_act_gate",
+            "type": "mamba_elementwise",
             "flops": 0.00016384,
             "arithmetic_intensity": 0.9410034920051461,
             "time": 0.03226708609827256,
@@ -256,6 +278,7 @@
         {
             "phase": "decode",
             "name": "out_proj",
+            "type": "gemm",
             "flops": 0.026214400000000002,
             "arithmetic_intensity": 0.999414405621706,
             "time": 0.06135277402972861,

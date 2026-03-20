@@ -81,9 +81,11 @@ def main(args):
             kernel_flops = kernel_data["flops"] # GFLOP
             kernel_arithmetic_intensity = kernel_data["arithmetic_intensity"] # FLOPS/byte
             throughput = kernel_flops / kernel_profile_time   # TFLOPS 
+            kernel_type = kernel_data.get("type", None)
             kernels.append({
                 "phase": phase,
                 "name": kernel_name,
+                "type": kernel_type,
                 "flops": kernel_data["flops"],
                 "arithmetic_intensity": kernel_arithmetic_intensity,
                 "time": kernel_profile_time,

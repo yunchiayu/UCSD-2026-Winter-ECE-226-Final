@@ -66,8 +66,13 @@ class MambaModel():
                 "discrete_A": { "type": "mamba_elementwise", "params": { "B": B, "D_i": D_i, "L": Lin, "N": N, "op1": ["B", "D_i", "L"], "op2": ["D_i", "N"] }},
                 "discrete_B": { "type": "mamba_elementwise", "params": { "B": B, "D_i": D_i, "L": Lin, "N": N, "op1": ["B", "D_i", "L"], "op2": ["B", "L", "N"] }},
                 "deltaB_u": { "type": "mamba_elementwise", "params": { "B": B, "D_i": D_i, "L": Lin, "N": N, "op1": ["B", "D_i", "L", "N"], "op2": ["B", "D_i", "L"] }},
+                # =============================
                 "scan_ssm_update": { "type": "mamba_elementwise", "params": { "B": B, "D_i": D_i, "L": 1, "N": N, "op1": ["B", "D_i", "N"], "op2": ["B", "D_i", "N"] }}, # Lin == 1, since it use for loop
                 "scan_matmul":  { "type": "gemm", "params": { "B": B, "M": D_i, "N": N, "K": 1 } }, # GEMV (B, D_i, N) x (B, N, 1) -> (B, D_i, 1)
+                # ------------------------------------------------------------
+                # "scan_ssm_update": { "type": "mamba_elementwise", "params": { "B": B*Lin, "D_i": D_i, "L": 1, "N": N, "op1": ["B", "D_i", "N"], "op2": ["B", "D_i", "N"] }}, # Lin == 1, since it use for loop
+                # "scan_matmul":  { "type": "gemm", "params": { "B": B*Lin, "M": D_i, "N": N, "K": 1 } }, # GEMV (B, D_i, N) x (B, N, 1) -> (B, D_i, 1)
+                # =============================
                 "scan_add_D": {"type": "mamba_elementwise", "params": { "B": B, "D_i": D_i, "L": 1, "N": N, "op1": ["B", "D_i", "L"], "op2": ["D_i"] }}, # Lin == 1, since output (y) dont have Lin dimenstion
                 "scan_act_gate": {"type": "mamba_elementwise", "params": { "B": B, "D_i": D_i, "L": 1, "N": N, "op1": ["B", "D_i", "L"], "op2": ["B", "D_i", "L"] }}, # Lin == 1, since output (y) dont have Lin dimenstion
                 "out_proj": { "type": "gemm", "params": { "B": 1, "M": B*Lin, "N": D_i, "K": D } }, # Linear (B, L, D_i) -> (B, L, D)

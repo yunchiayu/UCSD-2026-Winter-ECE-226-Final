@@ -170,6 +170,7 @@
                 "breakdown": {
                     "wq": {
                         "time": 0.008396800000000001,
+                        "type": "gemm",
                         "flops": 0.008388608,
                         "throughput": 0.9990243902439024,
                         "arithmetic_intensity": 0.9990243902439024,
@@ -184,6 +185,7 @@
                     },
                     "wk": {
                         "time": 0.001053184,
+                        "type": "gemm",
                         "flops": 0.001048576,
                         "throughput": 0.9956246961594556,
                         "arithmetic_intensity": 0.9956246961594555,
@@ -198,6 +200,7 @@
                     },
                     "wv": {
                         "time": 0.001053184,
+                        "type": "gemm",
                         "flops": 0.001048576,
                         "throughput": 0.9956246961594556,
                         "arithmetic_intensity": 0.9956246961594555,
@@ -212,6 +215,7 @@
                     },
                     "wo": {
                         "time": 0.008396800000000001,
+                        "type": "gemm",
                         "flops": 0.008388608,
                         "throughput": 0.9990243902439024,
                         "arithmetic_intensity": 0.9990243902439024,
@@ -226,6 +230,7 @@
                     },
                     "w1": {
                         "time": 0.04511488,
+                        "type": "gemm",
                         "flops": 0.045088768,
                         "throughput": 0.9994212109175509,
                         "arithmetic_intensity": 0.9994212109175509,
@@ -240,6 +245,7 @@
                     },
                     "w3": {
                         "time": 0.04511488,
+                        "type": "gemm",
                         "flops": 0.045088768,
                         "throughput": 0.9994212109175509,
                         "arithmetic_intensity": 0.9994212109175509,
@@ -254,6 +260,7 @@
                     },
                     "w2": {
                         "time": 0.04511488,
+                        "type": "gemm",
                         "flops": 0.045088768,
                         "throughput": 0.9994212109175509,
                         "arithmetic_intensity": 0.9994212109175509,
@@ -268,6 +275,7 @@
                     },
                     "qK_softmax_sV_fused": {
                         "time": 0.005246976,
+                        "type": "qK_softmax_sV_fused",
                         "flops": 0.008388608,
                         "throughput": 1.5987509758001561,
                         "arithmetic_intensity": 1.5987509758001561,

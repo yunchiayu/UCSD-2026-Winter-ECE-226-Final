@@ -307,6 +307,7 @@ class Evaluator:
             decode_data_transfer_size += data_transfer_size
             result_dict["decode"]["breakdown"][op_name] = {#operation_time # ms
                 "time": operation_time,
+                "type": op_data["type"],
                 "flops": num_flops * 1e-9, # GFLOPs
                 "throughput": throughput,
                 "arithmetic_intensity": arithmetic_intensity,

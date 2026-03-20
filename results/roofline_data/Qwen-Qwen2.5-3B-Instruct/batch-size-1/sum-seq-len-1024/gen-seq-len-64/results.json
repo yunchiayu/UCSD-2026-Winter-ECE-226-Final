@@ -26,6 +26,7 @@
         {
             "phase": "prefill",
             "name": "wq",
+            "type": "gemm",
             "flops": 8.589934592,
             "arithmetic_intensity": 512.0,
             "time": 0.059521778797109924,
@@ -36,6 +37,7 @@
         {
             "phase": "prefill",
             "name": "wk",
+            "type": "gemm",
             "flops": 1.073741824,
             "arithmetic_intensity": 186.1818181818182,
             "time": 0.016750222046135202,
@@ -46,6 +48,7 @@
         {
             "phase": "prefill",
             "name": "wv",
+            "type": "gemm",
             "flops": 1.073741824,
             "arithmetic_intensity": 186.1818181818182,
             "time": 0.015912888675100274,
@@ -56,6 +59,7 @@
         {
             "phase": "prefill",
             "name": "wo",
+            "type": "gemm",
             "flops": 8.589934592,
             "arithmetic_intensity": 512.0,
             "time": 0.058636445448630385,
@@ -66,6 +70,7 @@
         {
             "phase": "prefill",
             "name": "w1",
+            "type": "gemm",
             "flops": 46.170898432,
             "arithmetic_intensity": 642.8029197080292,
             "time": 0.28989599727922016,
@@ -76,6 +81,7 @@
         {
             "phase": "prefill",
             "name": "w3",
+            "type": "gemm",
             "flops": 46.170898432,
             "arithmetic_intensity": 642.8029197080292,
             "time": 0.2883511094583405,
@@ -86,6 +92,7 @@
         {
             "phase": "prefill",
             "name": "w2",
+            "type": "gemm",
             "flops": 46.170898432,
             "arithmetic_intensity": 642.8029197080292,
             "time": 0.2890053325229221,
@@ -96,6 +103,7 @@
         {
             "phase": "prefill",
             "name": "qK_softmax_sV_fused",
+            "type": "qK_softmax_sV_fused",
             "flops": 8.589934592,
             "arithmetic_intensity": 910.2222222222222,
             "time": 0.06084977897504965,
@@ -116,6 +124,7 @@
         {
             "phase": "decode",
             "name": "wq",
+            "type": "gemm",
             "flops": 0.008388608,
             "arithmetic_intensity": 0.9990243902439024,
             "time": 0.07988269410513264,
@@ -126,6 +135,7 @@
         {
             "phase": "decode",
             "name": "wk",
+            "type": "gemm",
             "flops": 0.001048576,
             "arithmetic_intensity": 0.9956246961594555,
             "time": 0.06005830571626171,
@@ -136,6 +146,7 @@
         {
             "phase": "decode",
             "name": "wv",
+            "type": "gemm",
             "flops": 0.001048576,
             "arithmetic_intensity": 0.9956246961594555,
             "time": 0.05942181954479667,
@@ -146,6 +157,7 @@
         {
             "phase": "decode",
             "name": "wo",
+            "type": "gemm",
             "flops": 0.008388608,
             "arithmetic_intensity": 0.9990243902439024,
             "time": 0.05558866644342844,
@@ -156,6 +168,7 @@
         {
             "phase": "decode",
             "name": "w1",
+            "type": "gemm",
             "flops": 0.045088768,
             "arithmetic_intensity": 0.9994212109175509,
             "time": 0.08288391791090059,
@@ -166,6 +179,7 @@
         {
             "phase": "decode",
             "name": "w3",
+            "type": "gemm",
             "flops": 0.045088768,
             "arithmetic_intensity": 0.9994212109175509,
             "time": 0.07485404233254182,
@@ -176,6 +190,7 @@
         {
             "phase": "decode",
             "name": "w2",
+            "type": "gemm",
             "flops": 0.045088768,
             "arithmetic_intensity": 0.9994212109175509,
             "time": 0.07626872259748375,
@@ -186,6 +201,7 @@
         {
             "phase": "decode",
             "name": "qK_softmax_sV_fused",
+            "type": "qK_softmax_sV_fused",
             "flops": 0.008388608,
             "arithmetic_intensity": 1.5987509758001561,
             "time": 0.06560133348264369,

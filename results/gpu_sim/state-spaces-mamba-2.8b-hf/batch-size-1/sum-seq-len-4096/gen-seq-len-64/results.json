@@ -281,6 +281,7 @@
                 "breakdown": {
                     "in_proj": {
                         "time": 0.052454400000000005,
+                        "type": "gemm",
                         "flops": 0.052428800000000005,
                         "throughput": 0.9995119570522205,
                         "arithmetic_intensity": 0.9995119570522206,
@@ -295,6 +296,7 @@
                     },
                     "x_proj": {
                         "time": 0.001976704,
+                        "type": "gemm",
                         "flops": 0.0019660800000000003,
                         "throughput": 0.9946253966198277,
                         "arithmetic_intensity": 0.9946253966198277,
@@ -309,6 +311,7 @@
                     },
                     "dt_proj": {
                         "time": 0.00164896,
+                        "type": "gemm",
                         "flops": 0.0016384000000000001,
                         "throughput": 0.9935959635163982,
                         "arithmetic_intensity": 0.9935959635163982,
@@ -323,6 +326,7 @@
                     },
                     "discrete_A": {
                         "time": 0.00164896,
+                        "type": "mamba_elementwise",
                         "flops": 0.0016384000000000001,
                         "throughput": 0.9935959635163982,
                         "arithmetic_intensity": 0.9935959635163982,
@@ -337,6 +341,7 @@
                     },
                     "discrete_B": {
                         "time": 0.00164896,
+                        "type": "mamba_elementwise",
                         "flops": 0.0016384000000000001,
                         "throughput": 0.9935959635163982,
                         "arithmetic_intensity": 0.9935959635163982,
@@ -351,6 +356,7 @@
                     },
                     "deltaB_u": {
                         "time": 0.00164896,
+                        "type": "mamba_elementwise",
                         "flops": 0.0016384000000000001,
                         "throughput": 0.9935959635163982,
                         "arithmetic_intensity": 0.9935959635163982,
@@ -365,6 +371,7 @@
                     },
                     "scan_ssm_update": {
                         "time": 0.00164896,
+                        "type": "mamba_elementwise",
                         "flops": 0.0016384000000000001,
                         "throughput": 0.9935959635163982,
                         "arithmetic_intensity": 0.9935959635163982,
@@ -379,6 +386,7 @@
                     },
                     "scan_matmul": {
                         "time": 0.000174112,
+                        "type": "gemm",
                         "flops": 0.00016384,
                         "throughput": 0.9410034920051462,
                         "arithmetic_intensity": 0.9410034920051461,
@@ -393,6 +401,7 @@
                     },
                     "scan_add_D": {
                         "time": 0.000174112,
+                        "type": "mamba_elementwise",
                         "flops": 0.00016384,
                         "throughput": 0.9410034920051462,
                         "arithmetic_intensity": 0.9410034920051461,
@@ -407,6 +416,7 @@
                     },
                     "scan_act_gate": {
                         "time": 0.000174112,
+                        "type": "mamba_elementwise",
                         "flops": 0.00016384,
                         "throughput": 0.9410034920051462,
                         "arithmetic_intensity": 0.9410034920051461,
@@ -421,6 +431,7 @@
                     },
                     "out_proj": {
                         "time": 0.02622976,
+                        "type": "gemm",
                         "flops": 0.026214400000000002,
                         "throughput": 0.999414405621706,
                         "arithmetic_intensity": 0.999414405621706,
