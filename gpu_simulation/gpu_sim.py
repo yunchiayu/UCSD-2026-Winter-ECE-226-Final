@@ -48,6 +48,10 @@ def main(args):
         from Llama import LlamaModelArgs, LlamaModel
         model_args = LlamaModelArgs.init_from_config(raw_config)
         model = LlamaModel(model_args=model_args)
+    elif 'MambaForCausalLM' in raw_config["architectures"]:
+        from Mamba import MambaModelArgs, MambaModel
+        model_args = MambaModelArgs.init_from_config(raw_config)
+        model = MambaModel(model_args=model_args)
     else:
         raise ValueError(f"Model {args.model_config_path} not supported")
 

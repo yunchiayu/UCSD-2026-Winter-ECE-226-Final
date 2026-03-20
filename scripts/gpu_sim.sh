@@ -5,9 +5,14 @@ PRJ_DIR="$SCRIPT_DIR/.."
 # ------ Python script: ------
 PY="$PRJ_DIR/gpu_simulation/gpu_sim.py"
 
-MODEL="Qwen/Qwen2.5-3B-Instruct"
-# MODEL="state-spaces/mamba2-2.7b"
-MODEL_CONFIG_PATH="$PRJ_DIR/gpu_simulation/model_config/Qwen2.5-3B-Instruct.json"
+# MODEL="Qwen/Qwen2.5-3B-Instruct"
+# MODEL_CONFIG_PATH="$PRJ_DIR/gpu_simulation/model_config/Qwen2.5-3B-Instruct.json"
+
+MODEL="state-spaces/mamba-2.8b-hf"
+MODEL_CONFIG_PATH="$PRJ_DIR/gpu_simulation/model_config/mamba-2.8b.json"
+
+
+
 HARDWARE_CONFIG_PATH="$PRJ_DIR/gpu_simulation/hardware_config/RTX4090.yaml"
 
 

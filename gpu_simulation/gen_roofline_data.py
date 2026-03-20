@@ -106,6 +106,7 @@ def main(args):
 
 
     save_json(output_dict, output_folder / "results.json")
+    print(f"Saved results to {output_folder / 'results.json'}")
     
 
 

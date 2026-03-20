@@ -22,9 +22,9 @@ class Evaluator:
 
         # GEMM time
         total_flops = 2 * M * N * K
-        gemm_time = total_flops / peak_compute * 1e-9 # ms
+        compute_time = total_flops / peak_compute * 1e-9 # ms
 
-        total_time = max(memory_time, gemm_time)
+        total_time = max(memory_time, compute_time)
 
         return total_time
     
@@ -44,11 +44,66 @@ class Evaluator:
 
         # QK_softmax_sV_fused time
         total_flops = 2 * (B * H_kv) * num_q_per_kv * Lin * D_h
-        qK_softmax_sV_fused_time = total_flops / peak_compute * 1e-9 # ms
+        compute_time = total_flops / peak_compute * 1e-9 # ms
 
-        total_time = max(memory_time, qK_softmax_sV_fused_time)
+        total_time = max(memory_time, compute_time)
 
         return total_time
+
+    def evaluate_mamba_elementwise(self,
+        B, D_i, L, N, op1, op2,
+    ):
+        # hardware
+        peak_bandwidth = self.hardware_config["GPU"]["peak_bandwidth"] # TB/s
+        peak_compute = self.hardware_config["GPU"]["peak_compute"] # TFLOPS
+
+        # Dimension table
+        dim_table = {"B": B, "D_i": D_i, "L": L, "N": N}
+
+        # Data transfer size
+        op1_size = self.element_size
+        op2_size = self.element_size
+        for dim_name in op1:
+            dim_value = dim_table[dim_name]
+            op1_size *= dim_value
+        for dim_name in op2:
+            dim_value = dim_table[dim_name]
+            op2_size *= dim_value
+        output_size = B * D_i * L * N * self.element_size
+        data_transfer_size = op1_size + op2_size + output_size # bytes
+        memory_time = data_transfer_size / peak_bandwidth * 1e-9 # ms
+
+        # Elementwise time
+        total_flops = B * D_i * L * N
+        compute_time = total_flops / peak_compute * 1e-9 # ms
+
+        total_time = max(memory_time, compute_time)
+
+        return total_time
+
+    def evaluate_conv1d(self,
+        B, L, Cin, Cout, K, G
+    ):
+        # hardware
+        peak_bandwidth = self.hardware_config["GPU"]["peak_bandwidth"] # TB/s
+        peak_compute = self.hardware_config["GPU"]["peak_compute"] # TFLOPS
+
+        # Data transfer size
+        input_size = B * L * Cin * self.element_size
+        output_size = B * L * Cout * self.element_size
+        weight_size = (Cin / G) * Cout * K * self.element_size
+        data_transfer_size = input_size + output_size + weight_size # bytes
+        memory_time = data_transfer_size / peak_bandwidth * 1e-9 # ms
+
+        # Conv1d time
+        total_flops = 2 * B * L * K * (Cin/G) * Cout
+        compute_time = total_flops / peak_compute * 1e-9 # ms
+
+        total_time = max(memory_time, compute_time)
+
+        return total_time
+        
+
 
     def evaluate_single_layer(self, model_operator: dict):
         result_dict = {
@@ -112,6 +167,40 @@ class Evaluator:
                         "D_h": D_h,
                     },
                 }
+            elif op_data["type"] == "mamba_elementwise":
+                B, D_i, L, N, op1, op2 = op_data["params"]["B"], op_data["params"]["D_i"], op_data["params"]["L"], op_data["params"]["N"], op_data["params"]["op1"], op_data["params"]["op2"]
+                operation_time = self.evaluate_mamba_elementwise(B, D_i, L, N, op1, op2)
+                num_flops = B * D_i * L * N
+                throughput = num_flops / operation_time * 1e-9 # TFLOPS/s
+                arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
+                metadata = {
+                    "params": {
+                        "B": B,
+                        "D_i": D_i,
+                        "L": L,
+                        "N": N,
+                        "op1": op1,
+                        "op2": op2,
+                    },
+                }
+            elif op_data["type"] == "conv1d":
+                B, L, Cin, Cout, K, G = op_data["params"]["B"], op_data["params"]["L"], op_data["params"]["Cin"], op_data["params"]["Cout"], op_data["params"]["K"], op_data["params"]["G"]
+                operation_time = self.evaluate_conv1d(B, L, Cin, Cout, K, G)
+                num_flops = 2 * B * L * K * (Cin/G) * Cout
+                throughput = num_flops / operation_time * 1e-9 # TFLOPS/s
+                arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
+                metadata = {
+                    "params": {
+                        "B": B,
+                        "L": L,
+                        "Cin": Cin,
+                        "Cout": Cout,
+                        "K": K,
+                        "G": G,
+                    },
+                }
+            else:
+                raise ValueError(f"Unsupported operator: {op_data['type']}")
             prefill_time += operation_time
             prefill_flops += num_flops
             prefill_data_transfer_size += data_transfer_size

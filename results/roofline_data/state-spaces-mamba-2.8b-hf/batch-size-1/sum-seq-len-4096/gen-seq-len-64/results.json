@@ -1,0 +1,267 @@
+{
+    "args": {
+        "model_config_path": "scripts/../gpu_simulation/model_config/mamba-2.8b.json",
+        "hardware_config_path": "scripts/../gpu_simulation/hardware_config/RTX4090.yaml",
+        "sum_seq_len": 4096,
+        "gen_seq_len": 64,
+        "batch_size": 1
+    },
+    "unit": {
+        "time": "ms",
+        "flops": "GFLOPs",
+        "throughput": "TFLOPS",
+        "arithmetic_intensity": "FLOPS/byte"
+    },
+    "kernels": [
+        {
+            "phase": "prefill",
+            "name": "overall",
+            "flops": 338.06131200000004,
+            "arithmetic_intensity": 501.4504895286461,
+            "time": 12.905214552483228,
+            "throughput": 26.195714191745083,
+            "optimal_time": 3.4731401405869895,
+            "optimal_throughput": 97.33592608297829
+        },
+        {
+            "phase": "prefill",
+            "name": "in_proj",
+            "flops": 214.74836480000002,
+            "arithmetic_intensity": 1365.3333333333333,
+            "time": 1.3916684798896313,
+            "throughput": 154.31000119872732,
+            "optimal_time": 0.32488406172465967,
+            "optimal_throughput": 660.9999999999999
+        },
+        {
+            "phase": "prefill",
+            "name": "conv1d",
+            "flops": 0.16777216,
+            "arithmetic_intensity": 1.0666666666666667,
+            "time": 0.5557994982227683,
+            "throughput": 0.30185734340615716,
+            "optimal_time": 0.08392704000000001,
+            "optimal_throughput": 1.999023914104441
+        },
+        {
+            "phase": "prefill",
+            "name": "x_proj",
+            "flops": 8.053063680000001,
+            "arithmetic_intensity": 177.06051873198848,
+            "time": 0.07032650150358677,
+            "throughput": 114.50965863258932,
+            "optimal_time": 0.045481984,
+            "optimal_throughput": 177.06051873198848
+        },
+        {
+            "phase": "prefill",
+            "name": "dt_proj",
+            "flops": 6.710886400000001,
+            "arithmetic_intensity": 149.4890510948905,
+            "time": 0.16246199910528958,
+            "throughput": 41.30742227079675,
+            "optimal_time": 0.04489216,
+            "optimal_throughput": 149.4890510948905
+        },
+        {
+            "phase": "prefill",
+            "name": "discrete_A",
+            "flops": 0.33554432,
+            "arithmetic_intensity": 7.474452554744525,
+            "time": 4.499036028981209,
+            "throughput": 0.07458138095328454,
+            "optimal_time": 0.7131955200000001,
+            "optimal_throughput": 0.47048012864691013
+        },
+        {
+            "phase": "prefill",
+            "name": "discrete_B",
+            "flops": 0.33554432,
+            "arithmetic_intensity": 7.474452554744525,
+            "time": 1.5903014801442623,
+            "throughput": 0.21099415688751136,
+            "optimal_time": 0.713162752,
+            "optimal_throughput": 0.4705017460025731
+        },
+        {
+            "phase": "prefill",
+            "name": "deltaB_u",
+            "flops": 0.33554432,
+            "arithmetic_intensity": 7.474452554744525,
+            "time": 3.214657425880432,
+            "throughput": 0.1043794954008516,
+            "optimal_time": 1.38412032,
+            "optimal_throughput": 0.24242424242424243
+        },
+        {
+            "phase": "prefill",
+            "name": "scan_ssm_update",
+            "flops": 8.192e-05,
+            "arithmetic_intensity": 0.0018248175182481751,
+            "time": 0.03289000519810514,
+            "throughput": 0.002490726270992489,
+            "optimal_time": 0.0004915200000000001,
+            "optimal_throughput": 0.16666666666666666
+        },
+        {
+            "phase": "prefill",
+            "name": "scan_matmul",
+            "flops": 0.00016384,
+            "arithmetic_intensity": 0.9410034920051461,
+            "time": 0.05027212297721029,
+            "throughput": 0.0032590626831946823,
+            "optimal_time": 0.000174112,
+            "optimal_throughput": 0.9410034920051462
+        },
+        {
+            "phase": "prefill",
+            "name": "scan_add_D",
+            "flops": 8.192e-05,
+            "arithmetic_intensity": 0.47050174600257305,
+            "time": 0.2167295014951378,
+            "throughput": 0.0003779826901038566,
+            "optimal_time": 0.00018432000000000002,
+            "optimal_throughput": 0.44444444444444436
+        },
+        {
+            "phase": "prefill",
+            "name": "scan_act_gate",
+            "flops": 8.192e-05,
+            "arithmetic_intensity": 0.47050174600257305,
+            "time": 0.4004265032708645,
+            "throughput": 0.0002045818629157672,
+            "optimal_time": 0.00018432000000000002,
+            "optimal_throughput": 0.44444444444444436
+        },
+        {
+            "phase": "prefill",
+            "name": "out_proj",
+            "flops": 107.37418240000001,
+            "arithmetic_intensity": 1204.7058823529412,
+            "time": 0.7206450058147311,
+            "throughput": 148.9973309099773,
+            "optimal_time": 0.16244203086232983,
+            "optimal_throughput": 660.9999999999999
+        },
+        {
+            "phase": "decode",
+            "name": "overall",
+            "flops": 0.0892928,
+            "arithmetic_intensity": 0.9984881692534776,
+            "time": 0.524982483959775,
+            "throughput": 0.1700871985794516,
+            "optimal_time": 0.08942800000000002,
+            "optimal_throughput": 0.9984881692534775
+        },
+        {
+            "phase": "decode",
+            "name": "in_proj",
+            "flops": 0.052428800000000005,
+            "arithmetic_intensity": 0.9995119570522206,
+            "time": 0.08576843589980854,
+            "throughput": 0.6112831538777898,
+            "optimal_time": 0.052454400000000005,
+            "optimal_throughput": 0.9995119570522205
+        },
+        {
+            "phase": "decode",
+            "name": "x_proj",
+            "flops": 0.0019660800000000003,
+            "arithmetic_intensity": 0.9946253966198277,
+            "time": 0.047325726536655566,
+            "throughput": 0.04154357775103985,
+            "optimal_time": 0.001976704,
+            "optimal_throughput": 0.9946253966198277
+        },
+        {
+            "phase": "decode",
+            "name": "dt_proj",
+            "flops": 0.0016384000000000001,
+            "arithmetic_intensity": 0.9935959635163982,
+            "time": 0.05515449950235052,
+            "throughput": 0.029705645319656585,
+            "optimal_time": 0.00164896,
+            "optimal_throughput": 0.9935959635163982
+        },
+        {
+            "phase": "decode",
+            "name": "discrete_A",
+            "flops": 0.0016384000000000001,
+            "arithmetic_intensity": 0.9935959635163982,
+            "time": 0.03869724245760153,
+            "throughput": 0.042338934144858155,
+            "optimal_time": 0.00164896,
+            "optimal_throughput": 0.9935959635163982
+        },
+        {
+            "phase": "decode",
+            "name": "discrete_B",
+            "flops": 0.0016384000000000001,
+            "arithmetic_intensity": 0.9935959635163982,
+            "time": 0.037530664278165204,
+            "throughput": 0.04365496938334762,
+            "optimal_time": 0.00164896,
+            "optimal_throughput": 0.9935959635163982
+        },
+        {
+            "phase": "decode",
+            "name": "deltaB_u",
+            "flops": 0.0016384000000000001,
+            "arithmetic_intensity": 0.9935959635163982,
+            "time": 0.034818742165953154,
+            "throughput": 0.047055117390256515,
+            "optimal_time": 0.00164896,
+            "optimal_throughput": 0.9935959635163982
+        },
+        {
+            "phase": "decode",
+            "name": "scan_ssm_update",
+            "flops": 0.0016384000000000001,
+            "arithmetic_intensity": 0.9935959635163982,
+            "time": 0.03707618766657106,
+            "throughput": 0.044190088116239305,
+            "optimal_time": 0.00164896,
+            "optimal_throughput": 0.9935959635163982
+        },
+        {
+            "phase": "decode",
+            "name": "scan_matmul",
+            "flops": 0.00016384,
+            "arithmetic_intensity": 0.9410034920051461,
+            "time": 0.052482062813396624,
+            "throughput": 0.003121828510867489,
+            "optimal_time": 0.000174112,
+            "optimal_throughput": 0.9410034920051462
+        },
+        {
+            "phase": "decode",
+            "name": "scan_add_D",
+            "flops": 0.00016384,
+            "arithmetic_intensity": 0.9410034920051461,
+            "time": 0.04008871112273482,
+            "throughput": 0.004086936082788759,
+            "optimal_time": 0.000174112,
+            "optimal_throughput": 0.9410034920051462
+        },
+        {
+            "phase": "decode",
+            "name": "scan_act_gate",
+            "flops": 0.00016384,
+            "arithmetic_intensity": 0.9410034920051461,
+            "time": 0.03399021877294217,
+            "throughput": 0.004820210222666305,
+            "optimal_time": 0.000174112,
+            "optimal_throughput": 0.9410034920051462
+        },
+        {
+            "phase": "decode",
+            "name": "out_proj",
+            "flops": 0.026214400000000002,
+            "arithmetic_intensity": 0.999414405621706,
+            "time": 0.062049992743595794,
+            "throughput": 0.4224722492446319,
+            "optimal_time": 0.02622976,
+            "optimal_throughput": 0.999414405621706
+        }
+    ]
+}

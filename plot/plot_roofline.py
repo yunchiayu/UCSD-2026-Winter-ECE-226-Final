@@ -12,7 +12,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--hardware-config-path", type=str, default="./gpu_simulation/hardware_config/RTX4090.yaml")
     parser.add_argument("--roofline-data-dir", type=str, default="./results/roofline_data")
-    parser.add_argument("--model-name-list", type=List[str], default=["Qwen-Qwen2.5-3B-Instruct"])
+    parser.add_argument("--model-name-list", type=List[str], default=["state-spaces-mamba-2.8b-hf"]) # ["Qwen-Qwen2.5-3B-Instruct", "state-spaces-mamba-2.8b-hf"]
     parser.add_argument("--sum-seq-len-list", type=List[int], default=[1024, 2048, 4096, 8192]) # 1024, 2048, 4096, 8192
     parser.add_argument("--gen-seq-len", type=int, default=64)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -53,8 +53,8 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
     axis = plot_config.get("axis", {})
     xscale = axis.get("xscale", "log")
     yscale = axis.get("yscale", "log")
-    xlim = axis.get("xlim", (0.1, 1200))
-    ylim = axis.get("ylim", (0.1, 1200))
+    xlim = axis.get("xlim", (0.01, 1200))
+    ylim = axis.get("ylim", (0.01, 1200))
     ax.set_xscale(xscale)
     ax.set_yscale(yscale)
     ax.set_xlim(left=xlim[0], right=xlim[1])
@@ -118,7 +118,7 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
     phase_leg = fig.legend(
         phase_handles, ['Prefill', 'Decode'],
         loc='lower left',
-        bbox_to_anchor=(0.10, 0.08),
+        bbox_to_anchor=(0.12, 0.08),
         ncol=2,
         frameon=False,
         title='Phase',
@@ -135,7 +135,7 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
             model_handles, model_labels,
             handler_map={tuple: HandlerTuple(ndivide=None, pad=0.3)},
             loc='lower right',
-            bbox_to_anchor=(0.90, 0.08),
+            bbox_to_anchor=(0.88, 0.08),
             ncol=min(2, len(model_handles)),
             frameon=False,
             title='Models (Prompt Length: 1024, 2048, 4096, 8192)',
@@ -164,8 +164,8 @@ def main(args):
         "axis":{
             "xscale": "log",
             "yscale": "log",
-            "xlim": (0.1, 10000),
-            "ylim": (0.1, 10000),
+            "xlim": (0.01, 10000),
+            "ylim": (0.01, 10000),
         },
         "color": {
             "roofline": "#4A8462",
@@ -181,15 +181,10 @@ def main(args):
     # Load Model roofline data
     point_datas = []
     # model_colors = ["#9467bd", "#8c564b"]
-    model_colors = [
-        # {
-        #     "prefill": ["#BFDBFE", "#60A5FA", "#2563EB", "#1E3A8A"],
-        #     "decode": ["#E8F5E9", "#A5D6A7", "#66BB6A", "#2E7D32"],
-        # },
-        ["#BFDBFE", "#60A5FA", "#2563EB", "#1E3A8A"],
-        ["#E8F5E9", "#A5D6A7", "#66BB6A", "#2E7D32"],
-
-    ]
+    model_colors = {
+        "Qwen-Qwen2.5-3B-Instruct": ["#BFDBFE", "#60A5FA", "#2563EB", "#1E3A8A"],
+        "state-spaces-mamba-2.8b-hf": ["#E8F5E9", "#A5D6A7", "#66BB6A", "#2E7D32"]
+    }
     symbols = ["o", "*", "o", "s"] #{'triangle': '^', 'circle': 'o', 'square': 's'},
     
     for model_idx, model_name in enumerate(args.model_name_list): 
@@ -210,8 +205,8 @@ def main(args):
                     symbol = "^"
                 symbol_size = 72
 
-                color = model_colors[model_idx][sum_seq_len_idx]
-
+                # color = model_colors[model_idx][sum_seq_len_idx]
+                color = model_colors[model_name][sum_seq_len_idx]
                 point = {
                     "y-axis": kernel["throughput"], 
                     "x-axis": kernel["arithmetic_intensity"],
@@ -220,14 +215,19 @@ def main(args):
                     "symbol": symbol,
                     "symbol_size": symbol_size,
                 }
-
-                # rooflien check
-                roof = min(hw["peak_compute"], hw["peak_bandwidth"]*kernel["arithmetic_intensity"] )
-                if kernel["throughput"] > roof:
-                    print(f"Out of roofline: {kernel['name']} ({kernel['phase']})")
-                else:
-                    print(f"Within roofline: {kernel['name']:10s} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
                 point_datas.append(point)
+
+                # # rooflien check
+                # roof = min(hw["peak_compute"], hw["peak_bandwidth"]*kernel["arithmetic_intensity"] )
+                # if kernel["throughput"] > roof:
+                #     print(f"Out of roofline: {kernel['name']} ({kernel['phase']})")
+                # else:
+                #     print(f"Within roofline: {kernel['name']:10s} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
+
+
+                if kernel["throughput"] < 10 and kernel["arithmetic_intensity"] > 661:
+                    print(f"{kernel['name']} ({kernel['phase']}): throughput {kernel['throughput']:.2f} TFLOPS, arithmetic intensity {kernel['arithmetic_intensity']:.2f} FLOPs/Byte")
+                
 
     legends = {
         "phase_legend": {},
@@ -237,9 +237,10 @@ def main(args):
     model_handles = []
     model_labels = []
     for model_idx, model_name in enumerate(args.model_name_list):
-        if model_idx >= len(model_colors):
-            break
-        palette = model_colors[model_idx]
+        # if model_idx >= len(model_colors):
+        #     break
+        # palette = model_colors[model_idx]
+        palette = model_colors[model_name]
         handle_tuple = tuple(
             Line2D([0], [0], marker='s', linestyle='None', markersize=6,
                    markerfacecolor=c, markeredgecolor='none')
@@ -249,6 +250,8 @@ def main(args):
         # label
         if model_name == "Qwen-Qwen2.5-3B-Instruct":
             model_label = "Qwen2.5-3B-Instruct"
+        elif model_name == "state-spaces-mamba-2.8b-hf":
+            model_label = "Mamba-2.8B"
         else:
             model_label = model_name
         model_handles.append(handle_tuple)

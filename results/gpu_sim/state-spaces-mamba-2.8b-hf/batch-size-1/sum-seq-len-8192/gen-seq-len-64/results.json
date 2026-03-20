@@ -1,0 +1,428 @@
+{
+    "args": {
+        "model_config_path": "scripts/../gpu_simulation/model_config/mamba-2.8b.json",
+        "hardware_config_path": "scripts/../gpu_simulation/hardware_config/RTX4090.yaml",
+        "sum_seq_len": 8192,
+        "gen_seq_len": 64,
+        "batch_size": 1
+    },
+    "performance": {
+        "unit": {
+            "time": "ms",
+            "throughput": "tokens/s"
+        },
+        "TTFT_time": 444.2519506671346,
+        "decoding_time": 366.2970880000001,
+        "decoding_throughput": 174.72156371606204,
+        "performance_per_layer": {
+            "unit": {
+                "time": "ms",
+                "flops": "GFLOPs",
+                "throughput": "TFLOPS",
+                "arithmetic_intensity": "FLOPS/byte"
+            },
+            "prefill": {
+                "overall": {
+                    "time": 6.9414367291739785,
+                    "flops": 676.1222144000001,
+                    "throughput": 97.40378552444973,
+                    "arithmetic_intensity": 560.3618999764677
+                },
+                "breakdown": {
+                    "in_proj": {
+                        "time": 0.6497681234493193,
+                        "flops": 429.49672960000004,
+                        "throughput": 660.9999999999999,
+                        "arithmetic_intensity": 1638.4,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 8192,
+                                "N": 2560,
+                                "K": 10240
+                            }
+                        }
+                    },
+                    "conv1d": {
+                        "time": 0.16781312,
+                        "flops": 0.33554432,
+                        "throughput": 1.9995118379301928,
+                        "arithmetic_intensity": 1.28,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "L": 8192,
+                                "Cin": 5120,
+                                "Cout": 5120,
+                                "K": 4,
+                                "G": 5120
+                            }
+                        }
+                    },
+                    "x_proj": {
+                        "time": 0.08899788800000001,
+                        "flops": 16.106127360000002,
+                        "throughput": 180.97201767304858,
+                        "arithmetic_intensity": 180.9720176730486,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 8192,
+                                "N": 5120,
+                                "K": 192
+                            }
+                        }
+                    },
+                    "dt_proj": {
+                        "time": 0.08814592,
+                        "flops": 13.421772800000001,
+                        "throughput": 152.26765799256506,
+                        "arithmetic_intensity": 152.26765799256506,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 8192,
+                                "N": 160,
+                                "K": 5120
+                            }
+                        }
+                    },
+                    "discrete_A": {
+                        "time": 1.4262272,
+                        "flops": 0.67108864,
+                        "throughput": 0.4705341757610569,
+                        "arithmetic_intensity": 7.613382899628252,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "D_i": 5120,
+                                "L": 8192,
+                                "N": 16,
+                                "op1": [
+                                    "B",
+                                    "D_i",
+                                    "L"
+                                ],
+                                "op2": [
+                                    "D_i",
+                                    "N"
+                                ]
+                            }
+                        }
+                    },
+                    "discrete_B": {
+                        "time": 1.426325504,
+                        "flops": 0.67108864,
+                        "throughput": 0.4705017460025731,
+                        "arithmetic_intensity": 7.613382899628252,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "D_i": 5120,
+                                "L": 8192,
+                                "N": 16,
+                                "op1": [
+                                    "B",
+                                    "D_i",
+                                    "L"
+                                ],
+                                "op2": [
+                                    "B",
+                                    "L",
+                                    "N"
+                                ]
+                            }
+                        }
+                    },
+                    "deltaB_u": {
+                        "time": 2.76824064,
+                        "flops": 0.67108864,
+                        "throughput": 0.24242424242424243,
+                        "arithmetic_intensity": 7.613382899628252,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "D_i": 5120,
+                                "L": 8192,
+                                "N": 16,
+                                "op1": [
+                                    "B",
+                                    "D_i",
+                                    "L",
+                                    "N"
+                                ],
+                                "op2": [
+                                    "B",
+                                    "D_i",
+                                    "L"
+                                ]
+                            }
+                        }
+                    },
+                    "scan_ssm_update": {
+                        "time": 0.0004915200000000001,
+                        "flops": 8.192e-05,
+                        "throughput": 0.16666666666666666,
+                        "arithmetic_intensity": 0.0009293680297397769,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "D_i": 5120,
+                                "L": 1,
+                                "N": 16,
+                                "op1": [
+                                    "B",
+                                    "D_i",
+                                    "N"
+                                ],
+                                "op2": [
+                                    "B",
+                                    "D_i",
+                                    "N"
+                                ]
+                            }
+                        }
+                    },
+                    "scan_matmul": {
+                        "time": 0.000174112,
+                        "flops": 0.00016384,
+                        "throughput": 0.9410034920051462,
+                        "arithmetic_intensity": 0.9410034920051461,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 5120,
+                                "N": 16,
+                                "K": 1
+                            }
+                        }
+                    },
+                    "scan_add_D": {
+                        "time": 0.00018432000000000002,
+                        "flops": 8.192e-05,
+                        "throughput": 0.44444444444444436,
+                        "arithmetic_intensity": 0.47050174600257305,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "D_i": 5120,
+                                "L": 1,
+                                "N": 16,
+                                "op1": [
+                                    "B",
+                                    "D_i",
+                                    "L"
+                                ],
+                                "op2": [
+                                    "D_i"
+                                ]
+                            }
+                        }
+                    },
+                    "scan_act_gate": {
+                        "time": 0.00018432000000000002,
+                        "flops": 8.192e-05,
+                        "throughput": 0.44444444444444436,
+                        "arithmetic_intensity": 0.47050174600257305,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "D_i": 5120,
+                                "L": 1,
+                                "N": 16,
+                                "op1": [
+                                    "B",
+                                    "D_i",
+                                    "L"
+                                ],
+                                "op2": [
+                                    "B",
+                                    "D_i",
+                                    "L"
+                                ]
+                            }
+                        }
+                    },
+                    "out_proj": {
+                        "time": 0.32488406172465967,
+                        "flops": 214.74836480000002,
+                        "throughput": 660.9999999999999,
+                        "arithmetic_intensity": 1412.4137931034484,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 8192,
+                                "N": 5120,
+                                "K": 2560
+                            }
+                        }
+                    }
+                }
+            },
+            "decode": {
+                "overall": {
+                    "time": 0.08942800000000002,
+                    "flops": 0.0892928,
+                    "throughput": 0.9984881692534775,
+                    "arithmetic_intensity": 0.9984881692534776
+                },
+                "breakdown": {
+                    "in_proj": {
+                        "time": 0.052454400000000005,
+                        "flops": 0.052428800000000005,
+                        "throughput": 0.9995119570522205,
+                        "arithmetic_intensity": 0.9995119570522206,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 2560,
+                                "K": 10240
+                            }
+                        }
+                    },
+                    "x_proj": {
+                        "time": 0.001976704,
+                        "flops": 0.0019660800000000003,
+                        "throughput": 0.9946253966198277,
+                        "arithmetic_intensity": 0.9946253966198277,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 5120,
+                                "K": 192
+                            }
+                        }
+                    },
+                    "dt_proj": {
+                        "time": 0.00164896,
+                        "flops": 0.0016384000000000001,
+                        "throughput": 0.9935959635163982,
+                        "arithmetic_intensity": 0.9935959635163982,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 160,
+                                "K": 5120
+                            }
+                        }
+                    },
+                    "discrete_A": {
+                        "time": 0.00164896,
+                        "flops": 0.0016384000000000001,
+                        "throughput": 0.9935959635163982,
+                        "arithmetic_intensity": 0.9935959635163982,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 160,
+                                "K": 5120
+                            }
+                        }
+                    },
+                    "discrete_B": {
+                        "time": 0.00164896,
+                        "flops": 0.0016384000000000001,
+                        "throughput": 0.9935959635163982,
+                        "arithmetic_intensity": 0.9935959635163982,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 160,
+                                "K": 5120
+                            }
+                        }
+                    },
+                    "deltaB_u": {
+                        "time": 0.00164896,
+                        "flops": 0.0016384000000000001,
+                        "throughput": 0.9935959635163982,
+                        "arithmetic_intensity": 0.9935959635163982,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 160,
+                                "K": 5120
+                            }
+                        }
+                    },
+                    "scan_ssm_update": {
+                        "time": 0.00164896,
+                        "flops": 0.0016384000000000001,
+                        "throughput": 0.9935959635163982,
+                        "arithmetic_intensity": 0.9935959635163982,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 160,
+                                "K": 5120
+                            }
+                        }
+                    },
+                    "scan_matmul": {
+                        "time": 0.000174112,
+                        "flops": 0.00016384,
+                        "throughput": 0.9410034920051462,
+                        "arithmetic_intensity": 0.9410034920051461,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 5120,
+                                "N": 16,
+                                "K": 1
+                            }
+                        }
+                    },
+                    "scan_add_D": {
+                        "time": 0.000174112,
+                        "flops": 0.00016384,
+                        "throughput": 0.9410034920051462,
+                        "arithmetic_intensity": 0.9410034920051461,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 5120,
+                                "N": 16,
+                                "K": 1
+                            }
+                        }
+                    },
+                    "scan_act_gate": {
+                        "time": 0.000174112,
+                        "flops": 0.00016384,
+                        "throughput": 0.9410034920051462,
+                        "arithmetic_intensity": 0.9410034920051461,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 5120,
+                                "N": 16,
+                                "K": 1
+                            }
+                        }
+                    },
+                    "out_proj": {
+                        "time": 0.02622976,
+                        "flops": 0.026214400000000002,
+                        "throughput": 0.999414405621706,
+                        "arithmetic_intensity": 0.999414405621706,
+                        "metadata": {
+                            "params": {
+                                "B": 1,
+                                "M": 1,
+                                "N": 5120,
+                                "K": 2560
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
