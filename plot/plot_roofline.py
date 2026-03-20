@@ -12,7 +12,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--hardware-config-path", type=str, default="./gpu_simulation/hardware_config/RTX4090.yaml")
     parser.add_argument("--roofline-data-dir", type=str, default="./results/roofline_data")
-    parser.add_argument("--model-name-list", type=List[str], default=["Qwen-Qwen2.5-3B-Instruct", "state-spaces-mamba-2.8b-hf"]) # ["Qwen-Qwen2.5-3B-Instruct", "state-spaces-mamba-2.8b-hf"]
+    parser.add_argument("--model-name-list", type=List[str], default=["state-spaces-mamba-2.8b-hf"]) # ["Qwen-Qwen2.5-3B-Instruct", "state-spaces-mamba-2.8b-hf"]
     parser.add_argument("--sum-seq-len-list", type=List[int], default=[1024, 2048, 4096, 8192]) # 1024, 2048, 4096, 8192
     parser.add_argument("--gen-seq-len", type=int, default=64)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -82,7 +82,7 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
         ax.axhline(pbw * knee, linestyle='--', color=color)
         ax.text(knee * 1.02, ymin * 1.1, f'{knee:.2f}', rotation=0, va='bottom', ha='center', color=color, zorder=5)
         ax.text(0.085, pf * 1.04, f'{pf:.1f}', rotation=0, va='bottom', ha='right',
-                color=color, transform=ax.get_yaxis_transform(), zorder=5, clip_on=False)
+                color=color, transform=ax.get_yaxis_transform(), zorder=5, clip_on=False, fontsize=fontsize.get("labelsize", 18))
 
     # Plot each point
     for point_data in point_datas:
@@ -118,7 +118,7 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
     phase_leg = fig.legend(
         phase_handles, ['Prefill', 'Decode'],
         loc='lower left',
-        bbox_to_anchor=(0.12, 0.08),
+        bbox_to_anchor=(0.06, 0.03),
         ncol=2,
         frameon=False,
         title='Phase',
@@ -135,7 +135,7 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
             model_handles, model_labels,
             handler_map={tuple: HandlerTuple(ndivide=None, pad=0.3)},
             loc='lower right',
-            bbox_to_anchor=(0.88, 0.08),
+            bbox_to_anchor=(0.88, 0.03),
             ncol=min(2, len(model_handles)),
             frameon=False,
             title='Models (Prompt Length: 1024, 2048, 4096, 8192)',
@@ -153,13 +153,13 @@ def plot_roofline(args, hardware_configs, point_datas, output_path: str, plot_co
 def main(args):
 
     plot_config = {
-        "figsize": (10, 10),
+        "figsize": (13, 10),
         "fontsize": {
-            "labelsize": 12,
-            "titlesize": 12,
-            "tick_labelsize": 12,
-            "legend_fontsize": 12,
-            "legend_title_fontsize": 12
+            "labelsize": 18,
+            "titlesize": 18,
+            "tick_labelsize": 18,
+            "legend_fontsize": 18,
+            "legend_title_fontsize": 18
         },
         "axis":{
             "xscale": "log",
