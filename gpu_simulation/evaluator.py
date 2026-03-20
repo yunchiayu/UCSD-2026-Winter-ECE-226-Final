@@ -246,6 +246,7 @@ class Evaluator:
             prefill_flops += num_flops
             prefill_data_transfer_size += data_transfer_size
             result_dict["prefill"]["breakdown"][op_name] = {#operation_time # ms
+                "type": op_data["type"],
                 "time": operation_time,
                 "flops": num_flops * 1e-9, # GFLOPs
                 "throughput": throughput,
