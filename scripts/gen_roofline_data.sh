@@ -5,8 +5,8 @@ PRJ_DIR="$SCRIPT_DIR/.."
 # ------ Python script: ------
 PY="$PRJ_DIR/gpu_simulation/gen_roofline_data.py"
 
-# MODEL_NAME="Qwen/Qwen2.5-3B-Instruct"
-MODEL_NAME="state-spaces/mamba-2.8b-hf"
+MODEL_NAME="Qwen/Qwen2.5-3B-Instruct"
+# MODEL_NAME="state-spaces/mamba-2.8b-hf"
 
 # SUM_SEQ_LEN=8192
 SUM_SEQ_LEN_LIST=(1024 2048 4096 8192)

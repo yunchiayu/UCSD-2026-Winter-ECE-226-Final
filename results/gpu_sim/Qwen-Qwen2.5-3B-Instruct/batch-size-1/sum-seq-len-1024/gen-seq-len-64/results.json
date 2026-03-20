@@ -11,9 +11,9 @@
             "time": "ms",
             "throughput": "tokens/s"
         },
-        "TTFT_time": 9.418457087999998,
-        "decoding_time": 357.80493312000004,
-        "decoding_throughput": 178.86841146076594,
+        "TTFT_time": 9.848393944883508,
+        "decoding_time": 367.46860953600003,
+        "decoding_throughput": 174.16453634179078,
         "performance_per_layer": {
             "unit": {
                 "time": "ms",
@@ -23,10 +23,10 @@
             },
             "prefill": {
                 "overall": {
-                    "time": 0.26162380799999996,
-                    "flops": 157.84424243200002,
-                    "throughput": 603.3252234903638,
-                    "arithmetic_intensity": 603.3252234903637
+                    "time": 0.27356649846898634,
+                    "flops": 166.42998272,
+                    "throughput": 608.3712137685887,
+                    "arithmetic_intensity": 616.3883495145631
                 },
                 "breakdown": {
                     "wq": {
@@ -128,10 +128,10 @@
                         }
                     },
                     "qK_softmax_sV_fused": {
-                        "time": 0.0010526720000000002,
-                        "flops": 0.004194304,
-                        "throughput": 3.9844357976653693,
-                        "arithmetic_intensity": 3.9844357976653697,
+                        "time": 0.012995362468986386,
+                        "flops": 8.589934592,
+                        "throughput": 660.9999999999999,
+                        "arithmetic_intensity": 910.2222222222222,
                         "metadata": {
                             "params": {
                                 "B": 1,
@@ -139,6 +139,14 @@
                                 "num_q_per_kv": 8,
                                 "Lin": 1024,
                                 "D_h": 128
+                            },
+                            "flops": 8589934592,
+                            "data_transfer_size": 9437184,
+                            "data_transfer_size_breakdown": {
+                                "Q": 4194304,
+                                "K": 524288,
+                                "V": 524288,
+                                "output": 4194304
                             }
                         }
                     }
@@ -146,10 +154,10 @@
             },
             "decode": {
                 "overall": {
-                    "time": 0.15529728,
-                    "flops": 0.15833497600000002,
-                    "throughput": 1.0195605228887459,
-                    "arithmetic_intensity": 1.019560522888746
+                    "time": 0.15949158400000002,
+                    "flops": 0.16252928,
+                    "throughput": 1.0190461209539432,
+                    "arithmetic_intensity": 1.0190461209539432
                 },
                 "breakdown": {
                     "wq": {
@@ -251,10 +259,10 @@
                         }
                     },
                     "qK_softmax_sV_fused": {
-                        "time": 0.0010526720000000002,
-                        "flops": 0.004194304,
-                        "throughput": 3.9844357976653693,
-                        "arithmetic_intensity": 3.9844357976653697,
+                        "time": 0.005246976,
+                        "flops": 0.008388608,
+                        "throughput": 1.5987509758001561,
+                        "arithmetic_intensity": 1.5987509758001561,
                         "metadata": {
                             "params": {
                                 "B": 1,

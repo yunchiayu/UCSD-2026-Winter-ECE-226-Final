@@ -16,12 +16,12 @@
         {
             "phase": "prefill",
             "name": "overall",
-            "flops": 631.3769697280001,
-            "arithmetic_intensity": 1081.0121674977033,
+            "flops": 768.799145984,
+            "arithmetic_intensity": 1244.7945670628183,
             "time": 4.419230246709453,
-            "throughput": 142.87034946824093,
-            "optimal_time": 0.9862080670015129,
-            "optimal_throughput": 640.2066570471802
+            "throughput": 173.9667550828441,
+            "optimal_time": 1.189935466505295,
+            "optimal_throughput": 646.0847395715296
         },
         {
             "phase": "prefill",
@@ -96,22 +96,22 @@
         {
             "phase": "prefill",
             "name": "qK_softmax_sV_fused",
-            "flops": 0.016777216,
-            "arithmetic_intensity": 3.9960975609756098,
+            "flops": 137.438953472,
+            "arithmetic_intensity": 3640.8888888888887,
             "time": 0.5462044427792231,
-            "throughput": 0.03071600061440984,
-            "optimal_time": 0.004198400000000001,
-            "optimal_throughput": 3.9960975609756098
+            "throughput": 251.6254770332454,
+            "optimal_time": 0.20792579950378218,
+            "optimal_throughput": 660.9999999999999
         },
         {
             "phase": "decode",
             "name": "overall",
-            "flops": 0.17091788800000002,
-            "arithmetic_intensity": 1.0787341780332775,
+            "flops": 0.187695104,
+            "arithmetic_intensity": 1.071195434609192,
             "time": 0.5030018769812159,
-            "throughput": 0.33979572606323055,
-            "optimal_time": 0.158443008,
-            "optimal_throughput": 1.0787341780332775
+            "throughput": 0.3731499077626887,
+            "optimal_time": 0.175220224,
+            "optimal_throughput": 1.0711954346091923
         },
         {
             "phase": "decode",
@@ -186,12 +186,12 @@
         {
             "phase": "decode",
             "name": "qK_softmax_sV_fused",
-            "flops": 0.016777216,
-            "arithmetic_intensity": 3.9960975609756098,
+            "flops": 0.033554432,
+            "arithmetic_intensity": 1.5996875610232377,
             "time": 0.05966987515502195,
-            "throughput": 0.28116727169971284,
-            "optimal_time": 0.004198400000000001,
-            "optimal_throughput": 3.9960975609756098
+            "throughput": 0.5623345433994257,
+            "optimal_time": 0.020975616000000002,
+            "optimal_throughput": 1.5996875610232375
         }
     ]
 }

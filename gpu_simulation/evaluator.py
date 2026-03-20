@@ -12,6 +12,7 @@ class Evaluator:
         peak_bandwidth = self.hardware_config["GPU"]["peak_bandwidth"] # TB/s
         peak_compute = self.hardware_config["GPU"]["peak_compute"] # TFLOPS
 
+
         # GEMM parameters
         weight_size = B * (N * K) * self.element_size
         input_size = B * (M * N) * self.element_size
@@ -28,7 +29,7 @@ class Evaluator:
 
         return total_time
     
-    def evaluate_qK_softmax_sV_fused(self,
+    def evaluate_qK_softmax_sV_fused_decode(self,
         B, H_kv, num_q_per_kv, Lin, D_h,
     ):  
         # hardware
@@ -36,19 +37,62 @@ class Evaluator:
         peak_compute = self.hardware_config["GPU"]["peak_compute"] # TFLOPS
 
         # Data transfer size
-        KV_cache_size = 2 * B * H_kv * Lin * D_h * self.element_size # 2 for K & V
-        input_size = B * num_q_per_kv * H_kv * D_h
-        output_size = B * num_q_per_kv * H_kv * D_h
-        data_transfer_size = KV_cache_size + input_size + output_size # bytes
+        # B: (B * H_kv)
+        # M: num_q_per_kv
+        Q_size = (B * H_kv) * (num_q_per_kv) * D_h * self.element_size
+        K_size = (B * H_kv) * Lin * D_h * self.element_size
+        V_size = (B * H_kv) * Lin * D_h * self.element_size
+        output_size = (B * H_kv) * (num_q_per_kv * Lin) * D_h * self.element_size
+        data_transfer_size = Q_size + K_size + V_size + output_size # bytes
         memory_time = data_transfer_size / peak_bandwidth * 1e-9 # ms
 
         # QK_softmax_sV_fused time
-        total_flops = 2 * (B * H_kv) * num_q_per_kv * Lin * D_h
+        flops_QK = 2 * (B * H_kv) * num_q_per_kv * Lin * D_h
+        flops_SV = 2 * (B * H_kv) * num_q_per_kv * Lin * D_h
+        total_flops = flops_QK + flops_SV
         compute_time = total_flops / peak_compute * 1e-9 # ms
 
         total_time = max(memory_time, compute_time)
 
-        return total_time
+        return total_time, total_flops, data_transfer_size
+
+    def evaluate_qK_softmax_sV_fused_prefill(self,
+        B, H_kv, num_q_per_kv, Lin, D_h,
+    ):  
+        # hardware
+        peak_bandwidth = self.hardware_config["GPU"]["peak_bandwidth"] # TB/s
+        peak_compute = self.hardware_config["GPU"]["peak_compute"] # TF LOPS
+
+        # Data transfer size
+        # B: B * H_kv
+        # M: num_q_per_kv * Lin
+        # N: D_h
+        # K: Lin
+
+        # Data transfer size
+        Q_size = (B * H_kv) * (num_q_per_kv * Lin) * D_h * self.element_size
+        K_size = (B * H_kv) * Lin * D_h * self.element_size
+        V_size = (B * H_kv) * Lin * D_h * self.element_size
+        output_size = (B * H_kv) * (num_q_per_kv * Lin) * D_h * self.element_size
+        data_transfer_size = Q_size + K_size + V_size + output_size # bytes
+        memory_time = data_transfer_size / peak_bandwidth * 1e-9 # ms
+
+        data_transfer_size_breakdown = {
+            "Q": Q_size,
+            "K": K_size,
+            "V": V_size,
+            "output": output_size,
+        }
+
+        # QK_softmax_sV_fused time
+        flops_QK = 2 * (B * H_kv) * (num_q_per_kv * Lin) * D_h * Lin
+        flops_SV = 2 * (B * H_kv) * (num_q_per_kv * Lin) * Lin * D_h
+        total_flops = flops_QK + flops_SV
+        compute_time = total_flops / peak_compute * 1e-9 # ms
+
+        total_time = max(memory_time, compute_time)
+
+        return total_time, total_flops, data_transfer_size, data_transfer_size_breakdown
 
     def evaluate_mamba_elementwise(self,
         B, D_i, L, N, op1, op2,
@@ -149,14 +193,8 @@ class Evaluator:
                 }
             elif op_data["type"] == "qK_softmax_sV_fused":
                 B, H_kv, num_q_per_kv, Lin, D_h = op_data["params"]["B"], op_data["params"]["H_kv"], op_data["params"]["num_q_per_kv"], op_data["params"]["Lin"], op_data["params"]["D_h"]
-                operation_time = self.evaluate_qK_softmax_sV_fused(B, H_kv, num_q_per_kv, Lin, D_h)
-                num_flops = 2 * (B * H_kv) * num_q_per_kv * Lin * D_h
+                operation_time, num_flops, data_transfer_size, data_transfer_size_breakdown = self.evaluate_qK_softmax_sV_fused_prefill(B, H_kv, num_q_per_kv, Lin, D_h)
                 throughput = num_flops / operation_time * 1e-9 # TFLOPS/s
-
-                KV_cache_size = 2 * B * H_kv * Lin * D_h * self.element_size # 2 for K & V
-                input_size = B * num_q_per_kv * H_kv * D_h
-                output_size = B * num_q_per_kv * H_kv * D_h
-                data_transfer_size = KV_cache_size + input_size + output_size # bytes
                 arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
                 metadata = {
                     "params": {
@@ -166,6 +204,9 @@ class Evaluator:
                         "Lin": Lin,
                         "D_h": D_h,
                     },
+                    "flops": num_flops,
+                    "data_transfer_size": data_transfer_size,
+                    "data_transfer_size_breakdown": data_transfer_size_breakdown,
                 }
             elif op_data["type"] == "mamba_elementwise":
                 B, D_i, L, N, op1, op2 = op_data["params"]["B"], op_data["params"]["D_i"], op_data["params"]["L"], op_data["params"]["N"], op_data["params"]["op1"], op_data["params"]["op2"]
@@ -247,15 +288,8 @@ class Evaluator:
                 }
             elif op_data["type"] == "qK_softmax_sV_fused":
                 B, H_kv, num_q_per_kv, Lin, D_h = op_data["params"]["B"], op_data["params"]["H_kv"], op_data["params"]["num_q_per_kv"], op_data["params"]["Lin"], op_data["params"]["D_h"]
-                operation_time = self.evaluate_qK_softmax_sV_fused(B, H_kv, num_q_per_kv, Lin, D_h)
-                num_flops = 2 * (B * H_kv) * num_q_per_kv * Lin * D_h
+                operation_time, num_flops, data_transfer_size = self.evaluate_qK_softmax_sV_fused_decode(B, H_kv, num_q_per_kv, Lin, D_h)
                 throughput = num_flops / operation_time * 1e-9 # TFLOPS/s
-                
-                
-                KV_cache_size = 2 * B * H_kv * Lin * D_h * self.element_size # 2 for K & V
-                input_size = B * num_q_per_kv * H_kv * D_h
-                output_size = B * num_q_per_kv * H_kv * D_h
-                data_transfer_size = KV_cache_size + input_size + output_size # bytes
                 arithmetic_intensity = num_flops / data_transfer_size # FLOPS/byte
 
                 metadata = {
